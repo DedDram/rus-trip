@@ -1,0 +1,1 @@
+Для сброса пароля нажмите <a href="https://rus-trip.ru/users/<?=$userId?>/reset/<?=$code?>">на эту ссылку</a>.
