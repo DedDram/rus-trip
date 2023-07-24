@@ -27,4 +27,17 @@ class Content
             throw new NotFoundException();
         }
     }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getCity(string $alias)
+    {
+        $result = $this->db->query("SELECT * FROM `cities` WHERE `alias` = ".$this->db->quote($alias));
+        if(!empty($result)){
+            return $result[0];
+        }else{
+            throw new NotFoundException();
+        }
+    }
 }

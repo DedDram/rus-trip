@@ -229,4 +229,18 @@ class ContentController extends AbstractUsersAuthController
     {
         $this->view->renderHtml('content/contact.php', ['title' => 'Contact us']);
     }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function city($city_alias)
+    {
+        $cities = new Content();
+        $city = $cities->getCity((string) $city_alias);
+        $this->view->renderHtml('content/city.php',
+            [
+                'title' => $city->name.' - путеводитель',
+                'city' => $city,
+            ]);
+    }
 }

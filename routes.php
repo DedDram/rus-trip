@@ -4,11 +4,8 @@ return [
     //главная
     ['GET', '~^/($|\?(.*)$)~', [\Controllers\MainController::class, 'main']],
     //Разные страницы
-    ['GET', '~^/go/(\d+)(-$|$|-[^/]+)$~', [\Controllers\MapsController::class, 'sections']],
-    ['GET', '~^/go/(\d+)(-$|$|-[^/]+)/(\d+)(-$|$|-[^/]+)$~', [\Controllers\MapsController::class, 'categories']],
-    ['GET', '~^/go/(\d+)(-$|$|-[^/]+)/(\d+)(-$|$|-[^/]+)/(\d+)(-$|$|-[^/]+)$~', [\Controllers\MapsController::class, 'city']],
-    ['POST', '~^/post$~', [\Controllers\MapsController::class, 'getResponse']],
     ['GET', '~^/cookie-policy$~', [\Controllers\ContentController::class, 'cookiePolicy']],
     ['GET', '~^/privacy-policy$~', [\Controllers\ContentController::class, 'privacyPolicy']],
     ['GET', '~^/contact-us$~', [\Controllers\ContentController::class, 'contact']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)$~', [\Controllers\ContentController::class, 'city']],
 ];
