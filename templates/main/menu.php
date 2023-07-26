@@ -1,5 +1,6 @@
 <h2>Выберите город</h2>
-<span class="cities-box-wrapper" data-route="city/adler"><select onchange="location=this.value"><option
+<span class="cities-box-wrapper" data-route="city/adler">
+    <select id="citySelect" onchange="location=this.value"><option
                 disabled="disabled">—</option><option value="/abaza">Абаза</option><option
                 value="/abakan">Абакан</option><option value="/abdulino">Абдулино</option><option
                 value="/abinsk">Абинск</option><option value="/agidel">Агидель</option><option

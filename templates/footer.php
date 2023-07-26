@@ -1,10 +1,6 @@
 <footer>
     <div class="w728 opac">
-        <div class="left">
-            Выберите город:
-            <?php echo $footer; ?>
-        </div>
-
+        <div class="left cities-changer"></div>
         <div class="right">
             <!-- noindex -->Все фото на сайт добавлены пользователями, с их устного согласия о наличии прав
             на изображения. Если какое-либо фото нарушает Ваше авторское право - пишите
