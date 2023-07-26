@@ -237,10 +237,30 @@ class ContentController extends AbstractUsersAuthController
     {
         $cities = new Content();
         $city = $cities->getCity((string) $city_alias);
+        $navLinks = $cities->getNavLinks((string) $city_alias);
         $this->view->renderHtml('content/city.php',
             [
                 'title' => $city->name.' - путеводитель',
                 'city' => $city,
+                'navLinks' => $navLinks,
+            ]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function map($city_alias)
+    {
+        $cities = new Content();
+        $city = $cities->getCity((string) $city_alias);
+        $navLinks = $cities->getNavLinks((string) $city_alias);
+        $cityGenitive = $cities->getCityGenitive((string) $city->name);
+        $this->view->renderHtml('content/map.php',
+            [
+                'title' => 'Карта '.$cityGenitive->genitive.' с улицами и номерами домов',
+                'map' => $city->map,
+                'navLinks' => $navLinks,
+                'cityGenitive' => $cityGenitive,
             ]);
     }
 }

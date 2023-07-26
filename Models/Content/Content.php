@@ -40,4 +40,32 @@ class Content
             throw new NotFoundException();
         }
     }
+
+    public function getNavLinks($alias): array
+    {
+        return (array(
+            "{$alias}" => 'О городе',
+            "{$alias}/karta" => 'Карта',
+            "{$alias}/kak-dobratsya" => 'Как добраться',
+            "{$alias}/dostoprimechatelnosti" => 'Достопри-сти',
+            "{$alias}/gostinicy" => 'Гостиницы',
+            "{$alias}/restorany" => 'Рестораны',
+            "{$alias}/znakomstva" => 'Знакомства',
+            "{$alias}/foto" => 'Фото',
+            "{$alias}/taxi" => 'Такси',
+        ));
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getCityGenitive(string $cityName)
+    {
+        $result = $this->db->query("SELECT * FROM `cities_names` WHERE `nominative` = ".$this->db->quote($cityName));
+        if(!empty($result)){
+            return $result[0];
+        }else{
+            throw new NotFoundException();
+        }
+    }
 }
