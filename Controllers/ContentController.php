@@ -276,6 +276,20 @@ class ContentController extends AbstractUsersAuthController
         $navLinks = $cities->getNavLinks((string) $city_alias);
         $cityGenitive = $cities->getCityGenitive((string) $city->name);
         $memorials = $cities->getMemorials((int) $city->id);
+        $addresses = array();
+        foreach ($memorials as $memorial){
+            $addresses[] = array(
+                'geo_lat' => $memorial->geo_lat,
+                'geo_long' => $memorial->geo_long,
+                'url' => '/'.$city_alias .'/dostoprimechatelnosti/'. $memorial->alias,
+                'text' => $memorial->name,
+                'icon' => 'islands#lightBlueStretchyIcon'
+            );
+        }
+        $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
+        $script = '<script src="/../templates/main/js/map.js"></script>' . PHP_EOL;
+        $this->view->setVar('script', $script);
+        $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->renderHtml('content/memorials.php',
             [
                 'title' => 'Достопримечательности '.$cityGenitive->genitive,
@@ -284,6 +298,7 @@ class ContentController extends AbstractUsersAuthController
                 'city_alias' => $city_alias,
                 'memorials' => $memorials,
                 'cityGenitive' => $cityGenitive,
+                'addresses' => $addresses,
             ]);
     }
 }

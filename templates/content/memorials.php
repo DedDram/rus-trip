@@ -14,6 +14,15 @@
                 </span>
             </span>
         </div>
+        <script type="text/javascript">
+            let items = <?php echo json_encode($addresses); ?>;
+            ymaps.ready(function () {
+                map.init('map');
+                map.setClusterer(items);
+                map.setCenter([items[0].geo_lat, items[0].geo_long], 10);
+            });
+        </script>
+        <div id="map"></div>
         <h1>Достопримечательности <?php echo $cityGenitive->genitive; ?></h1>
         <!--module.db:breadcrumbs-social-buttons-->
         <div>
@@ -30,7 +39,7 @@
                 <span>Адрес: <span itemprop="address"><?php echo $memorial->address; ?></span></span><br>
                  <?php if (!empty($memorial->thumb)): ?>
                  <div class="entry-thumbs">
-                    <div><img src="https://rus-trip.ru/<?php echo $memorial->thumb; ?>" alt="<?php echo $memorial->descr; ?>"></div>
+                    <div><img src="https://rus-trip.ru/<?php echo $memorial->thumb; ?>" loading="lazy" alt="<?php echo $memorial->descr; ?>"></div>
                     </div>
                     <span>Телефон: <span itemprop="telephone"><?php echo $memorial->phone ?? 'неизвестно'; ?></span></span><br>
                     <span class="sylka-adres">E-mail: <?php echo $memorial->email ?? 'неизвестно'; ?></span><br>
