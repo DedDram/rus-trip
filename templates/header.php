@@ -50,7 +50,7 @@
                 <?php
                 if(!empty($navLinks)){
                     foreach ($navLinks as $key=>$navLink){
-                        echo "<li><a href='$key'>".$navLink."</a></li>";
+                        echo "<li><a href=/$key>".$navLink."</a></li>";
                     }
                 }else{
                     echo '<li><a href="/" class="nav-active">Главная</a></li>

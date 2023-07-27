@@ -259,7 +259,30 @@ class ContentController extends AbstractUsersAuthController
             [
                 'title' => 'Карта '.$cityGenitive->genitive.' с улицами и номерами домов',
                 'map' => $city->map,
+                'city' => $city,
                 'navLinks' => $navLinks,
+                'city_alias' => $city_alias,
+                'cityGenitive' => $cityGenitive,
+            ]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function memorials($city_alias)
+    {
+        $cities = new Content();
+        $city = $cities->getCity((string) $city_alias);
+        $navLinks = $cities->getNavLinks((string) $city_alias);
+        $cityGenitive = $cities->getCityGenitive((string) $city->name);
+        $memorials = $cities->getMemorials((int) $city->id);
+        $this->view->renderHtml('content/memorials.php',
+            [
+                'title' => 'Достопримечательности '.$cityGenitive->genitive,
+                'city' => $city,
+                'navLinks' => $navLinks,
+                'city_alias' => $city_alias,
+                'memorials' => $memorials,
                 'cityGenitive' => $cityGenitive,
             ]);
     }
