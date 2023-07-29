@@ -35,11 +35,11 @@
         <?php foreach ($memorials as $memorial): ?>
         <div class="separator"></div>
             <div class="list-entry regular-list-entry">
-                <strong><a href="https://rus-trip.ru/novosibirsk/dostoprimechatelnosti/<?php echo $memorial->alias; ?>-<?php echo $memorial->id; ?>"><?php echo $memorial->name; ?></a></strong>
+                <strong><a href="/novosibirsk/memorial-<?php echo $memorial->alias; ?>-<?php echo $memorial->id; ?>"><?php echo $memorial->name; ?></a></strong>
                 <span>Адрес: <span itemprop="address"><?php echo $memorial->address; ?></span></span><br>
                  <?php if (!empty($memorial->thumb)): ?>
                  <div class="entry-thumbs">
-                    <div><img src="https://rus-trip.ru/<?php echo $memorial->thumb; ?>" loading="lazy" alt="<?php echo $memorial->descr; ?>"></div>
+                    <div><img src="/<?php echo $memorial->thumb; ?>" loading="lazy" alt="<?php echo $memorial->descr; ?>"></div>
                     </div>
                     <span>Телефон: <span itemprop="telephone"><?php echo $memorial->phone ?? 'неизвестно'; ?></span></span><br>
                     <span class="sylka-adres">E-mail: <?php echo $memorial->email ?? 'неизвестно'; ?></span><br>

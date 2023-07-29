@@ -293,12 +293,41 @@ class ContentController extends AbstractUsersAuthController
         $this->view->renderHtml('content/memorials.php',
             [
                 'title' => 'Достопримечательности '.$cityGenitive->genitive,
+                'metaKey' => 'достопримечательности, '.$cityGenitive->genitive,
+                'metaDesc' => 'Достопримечательности '.$cityGenitive->genitive,
                 'city' => $city,
                 'navLinks' => $navLinks,
                 'city_alias' => $city_alias,
                 'memorials' => $memorials,
                 'cityGenitive' => $cityGenitive,
                 'addresses' => $addresses,
+            ]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function memorial($city_alias, $memorial_alias, $memorial_id)
+    {
+        $cities = new Content();
+        $memorial = $cities->getMemorial((string)$city_alias, (string)$memorial_alias, (int) $memorial_id);
+        $addresses = array(
+            'geo_lat' => $memorial->geo_lat,
+            'geo_long' => $memorial->geo_long,
+            'text' => $memorial->name,
+            'icon' => 'islands#lightBlueStretchyIcon'
+        );
+        $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
+        $script = '<script src="/../templates/main/js/mapMemorial.js"></script>' . PHP_EOL;
+        $this->view->setVar('script', $script);
+        $this->view->setVar('scriptNoCompress', $scriptNoCompress);
+        $this->view->renderHtml('content/memorial.php',
+            [
+                'title' => $memorial->name.' '.$memorial->cityName.' - отзывы',
+                'metaKey' => $memorial->keywords,
+                'metaDesc' => $memorial->descr,
+                'addresses' => $addresses,
+                'memorial' => $memorial,
             ]);
     }
 }
