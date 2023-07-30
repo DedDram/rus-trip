@@ -35,6 +35,17 @@
                 <span class="sylka-adres">E-mail: <?php echo $memorial->email ?? 'неизвестно'; ?></span><br>
                 <span class="sylka-adres">Сайт: <span itemprop="url"><?php echo $memorial->website ?? 'неизвестно'; ?></span></span>
             </div>
+            <div class="separator"></div>
+            <div id="photos-gallery">
+                <?php if(!empty($photos)): ?>
+                    <?php foreach ($photos as $photo): ?>
+                        <span itemscope itemtype="https://schema.org/ImageObject">
+	                        <img src="/<?php echo $photo->thumb; ?>" data-mfp-src="/<?php echo $photo->photo; ?>" title="<?php echo $photo->descr; ?>" itemprop="thumbnail" />
+	                        <meta itemprop="description" content="<?php echo $photo->descr; ?>" />
+                        </span>
+                     <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
         </div>
     </article>

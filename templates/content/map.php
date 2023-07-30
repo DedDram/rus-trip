@@ -16,12 +16,12 @@
         </div>
         <h1>Карта <?php echo $cityGenitive->genitive; ?> с улицами и номерами домов</h1>
         <!--module.db:breadcrumbs-social-buttons-->
+        <div><?php echo $map; ?></div>
         <?php
         if (preg_match('~\[map\](.*)html(.*)"(<p>(.*)</p>)"~msU', $city->meta, $matches)) {
             echo trim($matches[3]);
         }
         ?>
-        <div><?php echo $map; ?></div>
     </article>
     <span class="clear"></span>
     </section>

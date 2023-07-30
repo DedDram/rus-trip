@@ -263,6 +263,8 @@ class ContentController extends AbstractUsersAuthController
                 'navLinks' => $navLinks,
                 'city_alias' => $city_alias,
                 'cityGenitive' => $cityGenitive,
+                'metaKey' => 'карта, '.$cityGenitive->genitive.', с, улицами, и, номерами, домов',
+                'metaDesc' => 'Карта '.$cityGenitive->genitive.' с улицами и номерами домов',
             ]);
     }
 
@@ -281,7 +283,7 @@ class ContentController extends AbstractUsersAuthController
             $addresses[] = array(
                 'geo_lat' => $memorial->geo_lat,
                 'geo_long' => $memorial->geo_long,
-                'url' => '/'.$city_alias .'/dostoprimechatelnosti/'. $memorial->alias,
+                'url' => '/'.$city_alias .'/memorial-'. $memorial->alias.'-'. $memorial->id,
                 'text' => $memorial->name,
                 'icon' => 'islands#lightBlueStretchyIcon'
             );
@@ -311,6 +313,7 @@ class ContentController extends AbstractUsersAuthController
     {
         $cities = new Content();
         $memorial = $cities->getMemorial((string)$city_alias, (string)$memorial_alias, (int) $memorial_id);
+        $photos = $cities->getPhotoMemorial((int) $memorial_id);
         $addresses = array(
             'geo_lat' => $memorial->geo_lat,
             'geo_long' => $memorial->geo_long,
@@ -319,8 +322,12 @@ class ContentController extends AbstractUsersAuthController
         );
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
         $script = '<script src="/../templates/main/js/mapMemorial.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
+        $style = '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
+        $this->view->setVar('style', $style);
         $this->view->renderHtml('content/memorial.php',
             [
                 'title' => $memorial->name.' '.$memorial->cityName.' - отзывы',
@@ -328,6 +335,7 @@ class ContentController extends AbstractUsersAuthController
                 'metaDesc' => $memorial->descr,
                 'addresses' => $addresses,
                 'memorial' => $memorial,
+                'photos' => $photos,
             ]);
     }
 }

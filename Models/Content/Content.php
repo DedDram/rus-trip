@@ -73,7 +73,7 @@ class Content
      */
     public function getMemorials(int $cityId)
     {
-        $result = $this->db->query("SELECT t1.*, t3.descr, t3.thumb FROM `memorials` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id");
+        $result = $this->db->query("SELECT t1.*, t3.descr, t3.thumb FROM `memorials` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'memorials' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id");
         if(!empty($result)){
             return $result;
         }else{
@@ -95,5 +95,11 @@ class Content
         }else{
             throw new NotFoundException();
         }
+    }
+
+    public function getPhotoMemorial(int $memorialId)
+    {
+        return $this->db->query("SELECT * FROM `photos` WHERE `object_group` = 'memorials' AND `object_id` = ".$this->db->quote($memorialId));
+
     }
 }
