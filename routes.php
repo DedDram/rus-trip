@@ -11,4 +11,7 @@ return [
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/karta$~', [\Controllers\ContentController::class, 'map']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/memorials$~', [\Controllers\ContentController::class, 'memorials']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/memorial-([a-z\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'memorial']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/hotels$~', [\Controllers\ContentController::class, 'hotels']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/hotel-([a-z\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'hotel']],
+    ['POST', '~^/hotels$~', [\Controllers\ContentController::class, 'getResponse']],
 ];

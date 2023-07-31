@@ -17,6 +17,20 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
+    public function getResponse()
+    {
+        $data = '';
+        if (!empty($_POST['cityId']) && !empty($_POST['offset']) && !empty($_POST['limit'])) {
+            $cities = new Content();
+            echo $cities->getHotelsMore((int) $_POST['cityId'], (int) $_POST['offset'], 20);
+        }
+/*        $this->view->renderHtml('json/json.php', [
+            'data' => $data,
+        ]);*/
+    }
+    /**
+     * @throws NotFoundException
+     */
     public function view(int $contentId): void
     {
         $content = Content::getPage($contentId);
@@ -313,7 +327,7 @@ class ContentController extends AbstractUsersAuthController
     {
         $cities = new Content();
         $memorial = $cities->getMemorial((string)$city_alias, (string)$memorial_alias, (int) $memorial_id);
-        $photos = $cities->getPhotoMemorial((int) $memorial_id);
+        $photos = $cities->getPhoto((int) $memorial_id, 'memorials');
         $addresses = array(
             'geo_lat' => $memorial->geo_lat,
             'geo_long' => $memorial->geo_long,
@@ -338,4 +352,77 @@ class ContentController extends AbstractUsersAuthController
                 'photos' => $photos,
             ]);
     }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function hotels($city_alias)
+    {
+        $cities = new Content();
+        $city = $cities->getCity((string) $city_alias);
+        $navLinks = $cities->getNavLinks((string) $city_alias);
+        $cityGenitive = $cities->getCityGenitive((string) $city->name);
+        $hotels = $cities->getHotels((int) $city->id);
+        $addresses = array();
+        foreach ($hotels as $hotel){
+            $addresses[] = array(
+                'geo_lat' => $hotel->geo_lat,
+                'geo_long' => $hotel->geo_long,
+                'url' => '/'.$city_alias .'/hotel-'. $hotel->alias.'-'. $hotel->id,
+                'text' => $hotel->name,
+                'icon' => 'islands#lightBlueStretchyIcon'
+            );
+        }
+        $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
+        $script = '<script src="/../templates/main/js/map.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/hotels.js"></script>' . PHP_EOL;
+        $this->view->setVar('script', $script);
+        $this->view->setVar('scriptNoCompress', $scriptNoCompress);
+        $this->view->renderHtml('content/hotels.php',
+            [
+                'title' => 'Гостиницы '.$cityGenitive->genitive.' - отзывы, цены',
+                'metaKey' => 'гостиницы, '.$cityGenitive->genitive.', отзывы, цены',
+                'metaDesc' => 'Отзывы о гостиницах '.$cityGenitive->genitive.', расположение на карте, цены',
+                'city' => $city,
+                'navLinks' => $navLinks,
+                'city_alias' => $city_alias,
+                'hotels' => $hotels,
+                'cityGenitive' => $cityGenitive,
+                'addresses' => $addresses,
+            ]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function hotel($city_alias, $hotel_alias, $hotel_id)
+    {
+        $cities = new Content();
+        $hotel = $cities->getHotel((string)$city_alias, (string)$hotel_alias, (int) $hotel_id);
+        $photos = $cities->getPhoto((int) $hotel_id, 'hotels');
+        $addresses = array(
+            'geo_lat' => $hotel->geo_lat,
+            'geo_long' => $hotel->geo_long,
+            'text' => $hotel->name,
+            'icon' => 'islands#lightBlueStretchyIcon'
+        );
+        $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
+        $script = '<script src="/../templates/main/js/mapMemorial.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
+        $style = '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
+        $this->view->setVar('script', $script);
+        $this->view->setVar('scriptNoCompress', $scriptNoCompress);
+        $this->view->setVar('style', $style);
+        $this->view->renderHtml('content/hotel.php',
+            [
+                'title' => $hotel->name.' '.$hotel->cityName.' - отзывы',
+                'metaKey' => $hotel->keywords,
+                'metaDesc' => $hotel->descr,
+                'addresses' => $addresses,
+                'hotel' => $hotel,
+                'photos' => $photos,
+            ]);
+    }
+
 }

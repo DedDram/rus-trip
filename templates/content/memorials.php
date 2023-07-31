@@ -35,17 +35,17 @@
         <?php foreach ($memorials as $memorial): ?>
         <div class="separator"></div>
             <div class="list-entry regular-list-entry">
-                <strong><a href="/novosibirsk/memorial-<?php echo $memorial->alias; ?>-<?php echo $memorial->id; ?>"><?php echo $memorial->name; ?></a></strong>
+                <strong><a href="/<?php echo $city_alias; ?>/memorial-<?php echo $memorial->alias; ?>-<?php echo $memorial->id; ?>"><?php echo $memorial->name; ?></a></strong>
                 <span>Адрес: <span itemprop="address"><?php echo $memorial->address; ?></span></span><br>
                  <?php if (!empty($memorial->thumb)): ?>
                  <div class="entry-thumbs">
                     <div><img src="/<?php echo $memorial->thumb; ?>" loading="lazy" alt="<?php echo $memorial->descr; ?>"></div>
                     </div>
+                 <?php endif; ?>
                     <span>Телефон: <span itemprop="telephone"><?php echo $memorial->phone ?? 'неизвестно'; ?></span></span><br>
                     <span class="sylka-adres">E-mail: <?php echo $memorial->email ?? 'неизвестно'; ?></span><br>
                      <span class="sylka-adres">Сайт: <span itemprop="url"><?php echo $memorial->website ?? 'неизвестно'; ?></span></span>
                  </div>
-                 <?php endif; ?>
             </div>
        <?php endforeach; ?>
     </article>
