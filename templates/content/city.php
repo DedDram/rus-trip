@@ -4,6 +4,7 @@
             <!--module.db:breadcrumbs-social-buttons-->
         <img src="/<?php echo $city->photo; ?>" alt="Город <?php echo $city->name; ?>" /><br>
         <div><?php echo $city->about; ?></div>
+        <?php include __DIR__ . '/../comments/comments.php'; ?>
     </article>
     <span class="clear"></span>
 </section>

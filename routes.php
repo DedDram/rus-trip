@@ -13,5 +13,19 @@ return [
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/memorial-([a-z\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'memorial']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/hotels$~', [\Controllers\ContentController::class, 'hotels']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/hotel-([a-z\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'hotel']],
+    //POST запросы
+    ['POST', '~^/post/comment$~', [\Controllers\PostCommentsController::class, 'getResponse']],
     ['POST', '~^/hotels$~', [\Controllers\ContentController::class, 'getResponse']],
+    //пользователи, регистрация, авторизация
+    ['GET|POST', '~^/users/(\d+)/activate/(.+)$~', [\Controllers\UsersController::class, 'activate']],
+    ['GET|POST', '~^/users/register$~', [\Controllers\UsersController::class, 'signUp']],
+    ['GET|POST', '~^/users/login$~', [\Controllers\UsersController::class, 'login']],
+    ['GET|POST', '~^/users/logout$~', [\Controllers\UsersController::class, 'logOut']],
+    ['GET|POST', '~^/users/reset$~', [\Controllers\UsersController::class, 'reset']],
+    ['GET|POST', '~^/users/(\d+)/reset/(.+)$~', [\Controllers\UsersController::class, 'resetCheck']],
+    ['GET|POST', '~^/users/(\d+)/password$~', [\Controllers\UsersController::class, 'newPassword']],
+    ['GET|POST', '~^/users/profile$~', [Controllers\UsersController::class, 'profile']],
+    ['GET', '~^/comments\?task=unsubscribe&object_group=([a-z]+)&object_id=(\d+)$~', [\Controllers\UsersController::class, 'getResponse']],
+    //Cron
+    ['GET', '~^/cron/comments\?(.*)$~', [\Controllers\CronController::class, 'getResponse']],
 ];

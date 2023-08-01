@@ -252,11 +252,40 @@ class ContentController extends AbstractUsersAuthController
         $cities = new Content();
         $city = $cities->getCity((string) $city_alias);
         $navLinks = $cities->getNavLinks((string) $city_alias);
+
+        //комменты
+        $limit = 60;
+        if (empty($_GET['start'])) {
+            $page = 1;
+            $offset = $start = 0;
+        } else {
+            if (is_numeric($_GET['start'])) {
+                $page = $start = (int)$_GET['start'];
+                $offset = ($_GET['start'] - 1) * $limit;
+            } else {
+                throw new NotFoundException();
+            }
+        }
+        $comments = Comments::getComments('city', $city->id, $limit, $offset, $start, $this->user);
+
+        $style = '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $script = '<script src="/../templates/schools/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        if (!empty($this->user)) {
+            $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
+        }
+        $this->view->setVar('style', $style);
+        $this->view->setVar('script', $script);
+
         $this->view->renderHtml('content/city.php',
             [
                 'title' => $city->name.' - путеводитель',
                 'city' => $city,
                 'navLinks' => $navLinks,
+                'object_id' => $city->id,
+                'comments' => $comments,
+                'object_group' => 'city',
             ]);
     }
 

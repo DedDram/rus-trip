@@ -26,13 +26,20 @@
 <body>
 <header>
     <div class="headermap"><a href="/" title="Путеводитель по России">Путеводитель по России</a></div>
-    <div class="cities-changer header-left-box opac"></div>
-    <?php if($_SERVER['REQUEST_URI']=='/'): ?>
     <div class="header-left-box opac">
-        <h2>Самые большие города</h2>
-        <ul><li><a href="/moskva">Москва</a></li><li><a href="/sankt-peterburg">Санкт-Петербург</a></li><li><a href="/novosibirsk">Новосибирск</a></li><li><a href="/ekaterinburg">Екатеринбург</a></li><li><a href="/nizhniy-novgorod">Нижний Новгород</a></li></ul>
+        <h2>Авторизация</h2>
+        <ul>
+            <?php
+            if (empty($user)) {
+                echo '<li><a href="/register" rel="nofollow">Регистрация</a></li>
+                      <li class=""><a href="/users/login" rel="nofollow">Вход</a></li>';
+            }else{
+                echo '<li><a href="/users/logout">Выход ' . '</a><li><a href="/users/profile">Настройки</a></li>';
+            }
+            ?>
+        </ul>
     </div>
-    <?php endif; ?>
+    <div class="cities-changer header-left-box opac"></div>
     <div class="blazon-box header-right-box">
         <?php
         if(!empty($city)){
