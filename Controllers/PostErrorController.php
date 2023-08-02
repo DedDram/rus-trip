@@ -30,7 +30,7 @@ class PostErrorController extends AbstractUsersAuthController
     /**
      * @throws \Exception
      */
-    public function getError($id)
+    public function getError($id, $object_group)
     {
         if(!isset($_SESSION))
         {
@@ -40,6 +40,6 @@ class PostErrorController extends AbstractUsersAuthController
             $_SESSION['token'] = bin2hex(random_bytes(32));
         }
         $token = $_SESSION['token'];
-        $this->view->renderHtml('postError/postError.php', ['id' => $id, 'token' => $token]);
+        $this->view->renderHtml('postError/postError.php', ['id' => $id, 'object_group' => $object_group, 'token' => $token]);
     }
 }

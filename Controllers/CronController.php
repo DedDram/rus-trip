@@ -9,11 +9,9 @@ use Services\PHPMailer\Exception;
 
 class CronController extends AbstractUsersAuthController
 {
-    private string $server_ip;
 
     public function __construct()
     {
-        $this->server_ip = (require __DIR__ . '/../settings.php')['main']['server_ip'];
         parent::__construct();
     }
 
@@ -54,19 +52,19 @@ class CronController extends AbstractUsersAuthController
                 (new \Models\Comments\Comments)->blacklist((int)$_GET['item_id']);
             }
             //Получаем ссылку на страницу, где отзыв и редирект туда
-            if ($_GET['object_group'] == 'com_content') {
-                $url = Content::getUrl((int)$_GET['object_id']);
-            } else {
-                $url = Schools::getUrlSchool((int)$_GET['object_id']);
+            if ($_GET['object_group'] == 'city') {
+                $url = Content::getUrlCity((int)$_GET['object_id']);
+            }else {
+                $url = '/';
             }
             header('Location: ' . $site . $url . '?task=' . $_GET['task'], true, 301);
         } else if (!empty($this->user) && !empty($_GET['task']) && $task == 'unsubscribe' && !empty($_GET['object_group']) && !empty($_GET['object_id'])) {
             (new \Models\Comments\Comments)->unsubscribe($_GET['object_group'], $_GET['object_id'], $this->user->getId());
             //Получаем ссылку на страницу, где отзыв и редирект туда
             if ($_GET['object_group'] == 'com_content') {
-                $url = Content::getUrl((int)$_GET['object_id']);
+                $url = Content::getUrlCity((int)$_GET['object_id']);
             } else {
-                $url = Schools::getUrlSchool((int)$_GET['object_id']);
+                $url = '/';
             }
             header('Location: ' . $site . $url . '?task=' . $_GET['task'], true, 301);
         } else {

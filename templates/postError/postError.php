@@ -42,6 +42,7 @@
     <input type="hidden" name="token" value="<?php echo $token; ?>">
     <input type="hidden" name="id" value="<?php echo $id; ?>">
     <input type="hidden" name="task" value="postError">
+    <input type="hidden" name="object_group" value="<?php echo $object_group; ?>">
     <input type="text" name="mailfrom" value="" placeholder="Ваш E-mail адрес" class="postform">
     <br>
     <textarea name="description" style="width: 95%;height: 50%" placeholder="Опишите где и что у нас неправильно" class="postform"></textarea>

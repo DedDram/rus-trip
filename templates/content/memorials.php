@@ -28,9 +28,18 @@
         <div>
             <?php
             if (preg_match('~\[memorials\](.*)html(.*)"(<p>(.*)</p>)"~msU', $city->meta, $matches)) {
-                echo trim($matches[3]);
+                if(!empty($matches[3])){
+                    echo trim($matches[3]);
+                }
             }
             ?>
+        </div>
+        <div>
+            <a href="/posterror?id=<?php echo $city->id; ?>&object_group=memorials"
+               class="simplemodal"
+               data-width="450" data-height="380"
+               style="vertical-align: middle;float: right"
+               rel="nofollow">Нашли ошибку?</a><br>
         </div>
         <?php foreach ($memorials as $memorial): ?>
         <div class="separator"></div>
@@ -44,7 +53,15 @@
                  <?php endif; ?>
                     <span>Телефон: <span itemprop="telephone"><?php echo $memorial->phone ?? 'неизвестно'; ?></span></span><br>
                     <span class="sylka-adres">E-mail: <?php echo $memorial->email ?? 'неизвестно'; ?></span><br>
-                     <span class="sylka-adres">Сайт: <span itemprop="url"><?php echo $memorial->website ?? 'неизвестно'; ?></span></span>
+                     <span class="sylka-adres">Сайт: <span itemprop="url">
+                                                <?php
+                                                if (!empty($memorial->website)) {
+                                                    echo "<a href='" . $memorial->website . "'>" . $memorial->website . "</a>";
+                                                } else {
+                                                    echo "нет данных";
+                                                }
+                                                ?>
+                         </span></span>
                  </div>
             </div>
        <?php endforeach; ?>

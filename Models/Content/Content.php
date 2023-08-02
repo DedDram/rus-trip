@@ -177,4 +177,26 @@ class Content
             throw new NotFoundException();
         }
     }
+
+    public static function getUrlCity(int $city_id): string
+    {
+        $db = Db::getInstance();
+        $result = $db->query("SELECT * FROM `cities` WHERE `id` = ".$db->quote($city_id));
+        if(!empty($result)){
+            return '/'.$result[0]->alias;
+        }else{
+            return '/';
+        }
+    }
+
+    public static function getUrlMemorial(int $memorial_id): string
+    {
+        $db = Db::getInstance();
+        $result = $db->query("SELECT t2.alias as cityAlias,t1.alias FROM `memorials` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id WHERE t1.id = ".$db->quote($memorial_id));
+        if(!empty($result)){
+            return '/'.$result[0]->cityAlias.'/memorial-'.$result[0]->alias.'-'.$memorial_id;
+        }else{
+            return '/';
+        }
+    }
 }

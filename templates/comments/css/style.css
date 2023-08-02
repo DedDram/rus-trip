@@ -117,6 +117,7 @@ blockquote:before {
 }
 .scomments a:link, .scomments a:visited, .scomments a:hover {
     outline: none;
+    z-index: 100;
 }
 .scomments-item {
     -webkit-border-radius: 7px;

@@ -3,6 +3,7 @@
 namespace Models\PostError;
 
 use Exceptions\ForbiddenException;
+use Models\Content\Content;
 use Services\EmailSender;
 use Services\PHPMailer\Exception;
 
@@ -22,11 +23,16 @@ class PostError
             session_start();
         }
 
-        $id = (int)$id;
         $this->adminMail = (require __DIR__ . '/../../settings.php')['main']['mail'];
 
-        if (!empty($_POST['link'])) {
-            $link = $_POST['link'];
+        if (!empty($_POST['object_group'])) {
+            if($_POST['object_group'] == 'city'){
+                $link = Content::getUrlCity($id);
+            }elseif ($_POST['object_group'] == 'memorials'){
+                $link = Content::getUrlCity($id).'/memorials';
+            }elseif ($_POST['object_group'] == 'memorial'){
+                $link = Content::getUrlMemorial($id);
+            }
         }
         if (!empty($_POST['name'])) {
             $name = $_POST['name'];
@@ -41,11 +47,6 @@ class PostError
                     if (preg_match('#[а-яА-Я]#u', $description)) {
                         if (!empty($link)) {
                             $description .= '<i><br/><br/>------------------------------------------------<br/><a href="https://rus-trip.ru' . $link . '">https://rus-trip.ru' . $link . '</a></i>';
-                        } else {
-                            if ($id > 0) {
-                                $url = "https://rus-trip.ru/admin/schools?id=$id&task=edit";
-                                $description .= '<i><br/><br/>------------------------------------------------<br/><a href="' . $url . '">Редактировать школу #' . $id . '</a></i>';
-                            }
                         }
                         $description .= '<i><br/><br/>------------------------------------------------<br/>e-mail: ' . $email . '</i>';
 

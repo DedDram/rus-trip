@@ -55,7 +55,6 @@
                         <meta itemprop="bestRating" content="5">
                         <meta itemprop="worstRating" content="0">
                     </div>
-
                 </div>
                 <strong><a href="/<?php echo $city_alias; ?>/hotel-<?php echo $hotel->alias; ?>-<?php echo $hotel->id; ?>"><?php echo $hotel->name; ?></a></strong>
                 <span>Адрес: <span itemprop="address"><?php echo $hotel->address; ?></span></span><br>

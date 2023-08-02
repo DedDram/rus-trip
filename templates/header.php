@@ -26,7 +26,7 @@
 <body>
 <header>
     <div class="headermap"><a href="/" title="Путеводитель по России">Путеводитель по России</a></div>
-    <div class="header-left-box opac">
+    <div class="header-left-box opac login">
         <h2>Авторизация</h2>
         <ul>
             <?php
@@ -54,17 +54,22 @@
     <div class="section-header">
         <nav class="main-nav">
             <ul class="w728">
-                <?php
-                if(!empty($navLinks)){
-                    foreach ($navLinks as $key=>$navLink){
-                        echo "<li><a href=/$key>".$navLink."</a></li>";
-                    }
-                }else{
-                    echo '<li><a href="/" class="nav-active">Главная</a></li>
+                <a class="menu-item toggleMenu" href="#">☰</a>
+                <div id="menu2">
+                    <ul class="nav">
+                        <?php
+                        if (!empty($navLinks)) {
+                            foreach ($navLinks as $key => $navLink) {
+                                echo "<li><a href=/$key>" . $navLink . "</a></li>";
+                            }
+                        } else {
+                            echo '<li><a href="/" class="nav-active">Главная</a></li>
                     <li><a href="/kontakty.html">Обратная связь</a></li>
                     <li><a href="/kak-proehat-ot-i-do.html">Как проехать ОТ и ДО</a></li>';
-                }
-                ?>
+                        }
+                        ?>
+                    </ul>
+                </div>
             </ul>
         </nav>
         <div class="w728">

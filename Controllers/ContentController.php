@@ -269,7 +269,7 @@ class ContentController extends AbstractUsersAuthController
         $comments = Comments::getComments('city', $city->id, $limit, $offset, $start, $this->user);
 
         $style = '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
-        $script = '<script src="/../templates/schools/js/jquery.form.js"></script>' . PHP_EOL;
+        $script = '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
         if (!empty($this->user)) {
@@ -333,6 +333,7 @@ class ContentController extends AbstractUsersAuthController
         }
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
         $script = '<script src="/../templates/main/js/map.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->renderHtml('content/memorials.php',
@@ -357,6 +358,20 @@ class ContentController extends AbstractUsersAuthController
         $cities = new Content();
         $memorial = $cities->getMemorial((string)$city_alias, (string)$memorial_alias, (int) $memorial_id);
         $photos = $cities->getPhoto((int) $memorial_id, 'memorials');
+        //комменты
+        $limit = 60;
+        if (empty($_GET['start'])) {
+            $page = 1;
+            $offset = $start = 0;
+        } else {
+            if (is_numeric($_GET['start'])) {
+                $page = $start = (int)$_GET['start'];
+                $offset = ($_GET['start'] - 1) * $limit;
+            } else {
+                throw new NotFoundException();
+            }
+        }
+        $comments = Comments::getComments('memorial', $memorial->id, $limit, $offset, $start, $this->user);
         $addresses = array(
             'geo_lat' => $memorial->geo_lat,
             'geo_long' => $memorial->geo_long,
@@ -368,6 +383,15 @@ class ContentController extends AbstractUsersAuthController
         $script .= '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
         $style = '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
+
+        $style .= '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        if (!empty($this->user)) {
+            $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
+        }
+
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->setVar('style', $style);
@@ -379,6 +403,9 @@ class ContentController extends AbstractUsersAuthController
                 'addresses' => $addresses,
                 'memorial' => $memorial,
                 'photos' => $photos,
+                'object_id' => $memorial->id,
+                'comments' => $comments,
+                'object_group' => 'memorial',
             ]);
     }
 

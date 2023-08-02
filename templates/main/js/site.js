@@ -16,4 +16,12 @@ $(document).ready(function() {
             }
         }
     });
+
+    $('.toggleMenu').on('click', function() {
+        // Получаем элемент меню
+        var menu2 = $('#menu2');
+
+        // Переключаем видимость меню
+        menu2.toggleClass('active');
+    });
 });
