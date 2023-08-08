@@ -54,6 +54,10 @@ class CronController extends AbstractUsersAuthController
             //Получаем ссылку на страницу, где отзыв и редирект туда
             if ($_GET['object_group'] == 'city') {
                 $url = Content::getUrlCity((int)$_GET['object_id']);
+            }elseif ($_GET['object_group'] == 'memorial') {
+                $url = Content::getUrlMemorial((int)$_GET['object_id']);
+            }elseif ($_GET['object_group'] == 'hotel') {
+                $url = Content::getUrlHotel((int)$_GET['object_id']);
             }else {
                 $url = '/';
             }

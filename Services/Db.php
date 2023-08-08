@@ -8,7 +8,7 @@ class Db
 {
     /** @var PDO */
     private PDO $pdo;
-    private static $instance;
+    private static Db $instance;
 
     /**
      * @throws DbException

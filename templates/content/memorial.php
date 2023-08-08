@@ -19,14 +19,6 @@ $word = \Services\stString::declension($memorial->comments, array('отзыв', 
                 </span>
             </span>
         </div>
-        <script type="text/javascript">
-            let items = <?php echo json_encode($addresses); ?>;
-            ymaps.ready(function () {
-                map.init('map');
-                map.add(items);
-                map.setCenter([items.geo_lat, items.geo_long], 10);
-            });
-        </script>
         <div class="city_rating_wrapper">
             <div class="rating_wrapper" data-rating-width="<?php echo $width; ?>%" itemprop="aggregateRating"
                  itemscope="<?php echo $memorial->name; ?>" itemtype="https://schema.org/AggregateRating">
@@ -41,6 +33,14 @@ $word = \Services\stString::declension($memorial->comments, array('отзыв', 
             </div>
         </div>
         <h1 itemprop="name"><?php echo $memorial->name; ?></h1>
+        <script type="text/javascript">
+            let items = <?php echo json_encode($addresses); ?>;
+            ymaps.ready(function () {
+                map.init('map');
+                map.add(items);
+                map.setCenter([items.geo_lat, items.geo_long], 10);
+            });
+        </script>
         <div id="map"></div>
         <div itemscope itemtype="https://schema.org/TouristAttraction">
             <p>

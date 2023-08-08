@@ -331,16 +331,16 @@ class Comments extends ActiveRecordEntity
             if (!empty($items)) {
                 foreach ($items as $item) {
                     // YandexWebmaster
-                    $comment = self::_clearComment($item->description);
-                    if (strlen($comment) > 500) {
-                        self::YandexWebmaster($comment);
-                    }
+                    //  $comment = self::_clearComment($item->description);
+                    //  if (strlen($comment) > 500) {
+                        //     self::YandexWebmaster($comment);
+                        // }
                     // Пересчитываем рейтинг
                     self::_rate($item->object_group, $item->object_id, '+' . $item->rate);
                     // Добавляем рассылку
                     self::setNotification($item->object_group, $item->object_id, $item->id, 1);
                     // Добавляем страницу на переобход роботом
-                    $temp = self::getItem($item->object_group, $item->object_id);
+                    // $temp = self::getItem($item->object_group, $item->object_id);
                    // self::YandexWebmasterOverride('https://rus-trip.ru' . $temp['url']);
                 }
             }
@@ -579,6 +579,9 @@ class Comments extends ActiveRecordEntity
         if ($object_group == 'memorial') {
             $this->db->query("UPDATE `memorials` SET rate = rate + '" . $rate . "', vote = vote + '" . $vote . "', average = CASE WHEN vote = 0 THEN 0 ELSE vote/(vote+10)*rate/vote+10/(vote+10)*3.922 END, comments = (SELECT COUNT(*) FROM `cl6s3_comments_items` WHERE object_id = '" . $object_id . "' AND object_group = '" . $object_group . "' AND status = 1) WHERE id = '" . $object_id . "' LIMIT 1");
         }
+        if ($object_group == 'hotel') {
+            $this->db->query("UPDATE `hotels` SET rate = rate + '" . $rate . "', vote = vote + '" . $vote . "', average = CASE WHEN vote = 0 THEN 0 ELSE vote/(vote+10)*rate/vote+10/(vote+10)*3.922 END, comments = (SELECT COUNT(*) FROM `cl6s3_comments_items` WHERE object_id = '" . $object_id . "' AND object_group = '" . $object_group . "' AND status = 1) WHERE id = '" . $object_id . "' LIMIT 1");
+        }
     }
 
     private function getItem(string $object_group, int $object_id): ?array
@@ -594,6 +597,11 @@ class Comments extends ActiveRecordEntity
             $item = $this->db->query("SELECT t1.*, t2.alias as cityAlias,t2.name as cityName FROM `memorials` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id WHERE t1.id = ".$this->db->quote($object_id));
             $item['title'] = $item[0]->name;
             $item['url'] = '/' . $item[0]->cityAlias. '/memorial-'.$item[0]->alias.'-'.$item[0]->id;
+        }
+        if ($object_group == 'hotel') {
+            $item = $this->db->query("SELECT t1.*, t2.alias as cityAlias,t2.name as cityName FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id WHERE t1.id = ".$this->db->quote($object_id));
+            $item['title'] = $item[0]->name;
+            $item['url'] = '/' . $item[0]->cityAlias. '/hotel-'.$item[0]->alias.'-'.$item[0]->id;
         }
         return $item;
     }

@@ -372,6 +372,8 @@ class ContentController extends AbstractUsersAuthController
             }
         }
         $comments = Comments::getComments('memorial', $memorial->id, $limit, $offset, $start, $this->user);
+        $pagesCount = $comments['total'];
+        $pagination = new Pagination($page, $limit, $pagesCount);
         $addresses = array(
             'geo_lat' => $memorial->geo_lat,
             'geo_long' => $memorial->geo_long,
@@ -406,6 +408,8 @@ class ContentController extends AbstractUsersAuthController
                 'object_id' => $memorial->id,
                 'comments' => $comments,
                 'object_group' => 'memorial',
+                'pagination' => $pagination,
+                'pagesCount' => $pagesCount,
             ]);
     }
 
@@ -456,6 +460,22 @@ class ContentController extends AbstractUsersAuthController
         $cities = new Content();
         $hotel = $cities->getHotel((string)$city_alias, (string)$hotel_alias, (int) $hotel_id);
         $photos = $cities->getPhoto((int) $hotel_id, 'hotels');
+        //комменты
+        $limit = 60;
+        if (empty($_GET['start'])) {
+            $page = 1;
+            $offset = $start = 0;
+        } else {
+            if (is_numeric($_GET['start'])) {
+                $page = $start = (int)$_GET['start'];
+                $offset = ($_GET['start'] - 1) * $limit;
+            } else {
+                throw new NotFoundException();
+            }
+        }
+        $comments = Comments::getComments('hotel', $hotel->id, $limit, $offset, $start, $this->user);
+        $pagesCount = $comments['total'];
+        $pagination = new Pagination($page, $limit, $pagesCount);
         $addresses = array(
             'geo_lat' => $hotel->geo_lat,
             'geo_long' => $hotel->geo_long,
@@ -467,6 +487,13 @@ class ContentController extends AbstractUsersAuthController
         $script .= '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
         $style = '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
+        $style .= '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        if (!empty($this->user)) {
+            $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
+        }
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->setVar('style', $style);
@@ -478,6 +505,11 @@ class ContentController extends AbstractUsersAuthController
                 'addresses' => $addresses,
                 'hotel' => $hotel,
                 'photos' => $photos,
+                'object_id' => $hotel->id,
+                'comments' => $comments,
+                'object_group' => 'hotel',
+                'pagination' => $pagination,
+                'pagesCount' => $pagesCount,
             ]);
     }
 
