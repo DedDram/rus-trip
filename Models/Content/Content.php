@@ -109,7 +109,7 @@ class Content
      */
     public function getHotels(int $cityId)
     {
-        $result = $this->db->query("SELECT t1.*, t3.descr, t3.thumb FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'hotels' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id ORDER BY t1.rating_sum  DESC;");
+        $result = $this->db->query("SELECT t1.*, t3.descr, t3.thumb FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'hotels' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id ORDER BY t1.average  DESC;");
         if(!empty($result)){
             return $result;
         }else{
@@ -122,11 +122,11 @@ class Content
      */
     public function getHotelsMore(int $cityId, int $offset, int $limit): string
     {
-        $result = $this->db->query("SELECT t1.*, t3.descr, t3.thumb,t2.alias as cityAlias FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'hotels' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id ORDER BY t1.rating_sum  DESC LIMIT ".$offset.", ".$limit.";");
+        $result = $this->db->query("SELECT t1.*, t3.descr, t3.thumb,t2.alias as cityAlias FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'hotels' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id ORDER BY t1.average  DESC LIMIT ".$offset.", ".$limit.";");
         if(!empty($result)){
             $html = '';
             foreach ($result as $hotel){
-                $value = ($hotel->rating_votes > 0) ? round($hotel->rating_sum / $hotel->rating_votes, 2) : 0;
+                $value = ($hotel->rating_votes > 0) ? round($hotel->average / $hotel->rating_votes, 2) : 0;
                 $width = round($value / 5 * 100, 2);
                 $word = \Services\stString::declension($hotel->rating_votes, array('голос', 'голоса', 'голосов'));
                 $html .= '<div class="separator"></div>

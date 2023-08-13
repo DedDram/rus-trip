@@ -39,9 +39,9 @@
             if($i>20){
                 break;
             }
-            $value = ($hotel->rating_votes > 0) ? round($hotel->rating_sum / $hotel->rating_votes, 2) : 0;
+            $value = ($hotel->vote > 0) ? round($hotel->rate / $hotel->vote, 2) : 0;
             $width = round($value / 5 * 100, 2);
-            $word = \Services\stString::declension($hotel->rating_votes, array('голос', 'голоса', 'голосов'));
+            $word = \Services\stString::declension($hotel->vote, array('голос', 'голоса', 'голосов'));
             ?>
             <div class="separator"></div>
             <div class="list-entry regular-list-entry hotel-entry">
