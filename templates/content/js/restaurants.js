@@ -6,12 +6,12 @@ $(document).ready(function() {
     function loadMoreHotels() {
         var cityId = $("#city_id").text();
         $.ajax({
-            url: "/hotels",
+            url: "/restaurants",
             type: "POST",
             data: {
                 cityId: cityId,
+                object: 'restaurants',
                 offset: offset,
-                object: 'hotels',
                 limit: batchSize
             },
             success: function(response) {

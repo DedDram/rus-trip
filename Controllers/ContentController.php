@@ -8,6 +8,7 @@ use Exceptions\NotFoundException;
 use Exceptions\UnauthorizedException;
 use Models\Comments\Comments;
 use Models\Content\Content;
+use Models\Dating\Dating;
 use Models\Informer\Informer;
 use Services\ExternalLinks;
 use Services\Pagination;
@@ -20,216 +21,19 @@ class ContentController extends AbstractUsersAuthController
     public function getResponse()
     {
         $data = '';
-        if (!empty($_POST['cityId']) && !empty($_POST['offset']) && !empty($_POST['limit'])) {
+        if (!empty($_POST['cityId']) && !empty($_POST['offset']) && !empty($_POST['limit']) && !empty($_POST['object']) && $_POST['object'] =='hotels') {
             $cities = new Content();
             echo $cities->getHotelsMore((int) $_POST['cityId'], (int) $_POST['offset'], 20);
+        }
+        if (!empty($_POST['cityId']) && !empty($_POST['offset']) && !empty($_POST['limit']) && !empty($_POST['object']) && $_POST['object'] =='restaurants') {
+            $cities = new Content();
+            echo $cities->getRestaurantsMore((int) $_POST['cityId'], (int) $_POST['offset'], 20);
         }
 /*        $this->view->renderHtml('json/json.php', [
             'data' => $data,
         ]);*/
     }
-    /**
-     * @throws NotFoundException
-     */
-    public function view(int $contentId): void
-    {
-        $content = Content::getPage($contentId);
-        if (empty($content[0])) {
-            throw new NotFoundException();
-        }
-        //проверяем соответствие ID алиасу и если не совпадает - редирект на верный алиас
-        preg_match('~/(.*)/(\d+)-(.*)~m', $_SERVER['REQUEST_URI'], $uriAlias);
-        if ($content[0]->alias !== $uriAlias[3] || $content[0]->catAlias !== $uriAlias[1] && !preg_match('~/edit$~m', $uriAlias[1])) {
-            header('Location: ' . 'https://' . $_SERVER['HTTP_HOST'] . '/' . $content[0]->catAlias . '/' . $content[0]->id . '-' . $content[0]->alias, true, 301);
-        }
-        //внешние ссылки редирект
-        $content[0]->text = ExternalLinks::replaceExternalLinks($content[0]->text);
 
-        //комменты
-        $limit = 60;
-        if (empty($_GET['start'])) {
-            $page = 1;
-            $offset = $start = 0;
-        } else {
-            if (is_numeric($_GET['start'])) {
-                $page = $start = (int)$_GET['start'];
-                $offset = ($_GET['start'] - 1) * $limit;
-            } else {
-                throw new NotFoundException();
-            }
-        }
-        $comments = Comments::getComments('com_content', $contentId, $limit, $offset, $start, $this->user);
-        $pagesCount = $comments['total'];
-        //добавление стилей и скриптов комментов в /../header.php
-        $style = '<link rel="stylesheet" href="/../templates/maps/css/style.css">' . PHP_EOL;
-        $script = '<script src="/../templates/maps/js/map.js"></script>' . PHP_EOL;
-        if (!empty($this->user)) {
-            $script .= '<script src="/../templates/maps/js/moderation.js"></script>' . PHP_EOL;
-        }
-
-        $this->view->setVar('style', $style);
-        $this->view->setVar('script', $script);
-
-        $pagination = new Pagination($page, $limit, $pagesCount);
-
-        $this->view->renderHtml('content/view.php', [
-            'content' => $content[0],
-            'title' => $content[0]->title,
-            'metaKey' => $content[0]->metakey,
-            'metaDesc' => $content[0]->metadesc,
-            'maps' => $comments,
-            'pagination' => $pagination,
-            'pagesCount' => $pagesCount,
-            'object_group' => 'com_content',
-            'object_id' => $contentId,
-            'user' => $this->user,
-        ]);
-
-    }
-
-    /**
-     * @throws NotFoundException
-     */
-    public function viewAllPagination($catId = 0): void
-    {
-        $content = Content::findAllObjectId('catid', $catId, 'ORDER BY id DESC');
-        switch ($catId) {
-            case 231:
-                $catAlias = 'sochineniya';
-                $title = 'Сочинения на тему';
-                break;
-            case 28:
-                $catAlias = 'news';
-                $title = 'Новости образования';
-                break;
-            default:
-                throw new \Exceptions\NotFoundException();
-        }
-        if (empty($content)) {
-            $this->view->renderHtml('errors/404.php', ['title' => 'Страница не найдена'], 404);
-            return;
-        }
-        $pagesCount = count($content);
-        $limit = 5;
-        if (empty($_GET['start'])) {
-            $page = 1;
-            $offset = 0;
-        } else {
-            if (is_numeric($_GET['start'])) {
-                $page = (int)$_GET['start'];
-                $offset = ($_GET['start'] - 1) * $limit;
-            } else {
-                throw new NotFoundException();
-            }
-        }
-
-
-        $pagination = new Pagination($page, $limit, $pagesCount);
-        //сообщения об удалении новости
-        $successful = '';
-        $error = '';
-        if (!empty($_COOKIE['delete'])) {
-            setcookie('delete', '', 0, '/', '', false, true);
-            $successful = 'Новость успешно удалена';
-        }
-
-        $this->view->renderHtml('content/viewAll.php', [
-            'contents' => array_slice($content, $offset, $limit),
-            'pagination' => $pagination,
-            'page' => $page,
-            'title' => $title,
-            'pagesCount' => $pagesCount,
-            'successful' => $successful,
-            'error' => $error,
-            'catAlias' => $catAlias,
-        ]);
-    }
-
-    /**
-     * @throws UnauthorizedException|NotFoundException
-     * @throws ForbiddenException
-     */
-    public function edit(int $contentId)
-    {
-        $content = Content::getById($contentId);
-
-        if ($content === null) {
-            throw new NotFoundException();
-        }
-        if (!empty($this->user) && !$this->user->isAdmin()) {
-            throw new ForbiddenException();
-        }
-        if ($this->user === null) {
-            throw new UnauthorizedException();
-        }
-
-        if (!empty($_POST)) {
-            try {
-                $content->updateFromArray($_POST);
-            } catch (InvalidArgumentException $e) {
-                $this->view->renderHtml('content/edit.php', ['error' => $e->getMessage(), 'content' => $content]);
-                return;
-            }
-            $alias = $content->getAlias();
-            header('Location: /news/' . $content->getId() . '-' . $alias, true, 301);
-            exit();
-        }
-
-        $this->view->renderHtml('content/edit.php', ['content' => $content]);
-    }
-
-    /**
-     * @throws ForbiddenException
-     * @throws UnauthorizedException
-     */
-    public function add(): void
-    {
-        if ($this->user === null) {
-            throw new UnauthorizedException();
-        }
-        if (!$this->user->isAdmin()) {
-            throw new ForbiddenException();
-        }
-
-        if (!empty($_POST)) {
-            try {
-                $content = Content::createFromArray($_POST);
-            } catch (InvalidArgumentException $e) {
-                $this->view->renderHtml('content/add.php', ['error' => $e->getMessage()]);
-                return;
-            }
-
-            header('Location: /news/' . $content->getId(), true, 301);
-            exit();
-        }
-
-        $this->view->renderHtml('content/add.php');
-    }
-
-    /**
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws UnauthorizedException
-     */
-    public function delete(int $contentId): void
-    {
-        $content = Content::getById($contentId);
-
-        if ($content === null) {
-            throw new NotFoundException();
-        }
-        if (!empty($this->user) && !$this->user->isAdmin()) {
-            throw new ForbiddenException();
-        }
-        if ($this->user === null) {
-            throw new UnauthorizedException();
-        }
-
-        $content->delete();
-        setcookie('delete', 'delete', 0, '/', '', false, true);
-        header('Location: /content', true, 301);
-
-    }
 
     public function cookiePolicy()
     {
@@ -322,12 +126,23 @@ class ContentController extends AbstractUsersAuthController
         $cityGenitive = $cities->getCityGenitive((string) $city->name);
         $memorials = $cities->getMemorials((int) $city->id);
         $addresses = array();
-        foreach ($memorials as $memorial){
+        if(!empty($memorials)){
+            foreach ($memorials as $memorial){
+                $addresses[] = array(
+                    'geo_lat' => $memorial->geo_lat,
+                    'geo_long' => $memorial->geo_long,
+                    'url' => '/'.$city_alias .'/memorial-'. $memorial->alias.'-'. $memorial->id,
+                    'text' => $memorial->name,
+                    'icon' => 'islands#lightBlueStretchyIcon'
+                );
+            }
+        }else{
+            preg_match('~\[(.*)\, (.*)\], controls~msU', $city->map, $geo);
             $addresses[] = array(
-                'geo_lat' => $memorial->geo_lat,
-                'geo_long' => $memorial->geo_long,
-                'url' => '/'.$city_alias .'/memorial-'. $memorial->alias.'-'. $memorial->id,
-                'text' => $memorial->name,
+                'geo_lat' => $geo[1],
+                'geo_long' => $geo[2],
+                'url' => '/',
+                'text' => '',
                 'icon' => 'islands#lightBlueStretchyIcon'
             );
         }
@@ -358,6 +173,7 @@ class ContentController extends AbstractUsersAuthController
         $cities = new Content();
         $memorial = $cities->getMemorial((string)$city_alias, (string)$memorial_alias, (int) $memorial_id);
         $photos = $cities->getPhoto((int) $memorial_id, 'memorials');
+        $navLinks = $cities->getNavLinks((string) $city_alias);
         //комменты
         $limit = 60;
         if (empty($_GET['start'])) {
@@ -410,6 +226,7 @@ class ContentController extends AbstractUsersAuthController
                 'object_group' => 'memorial',
                 'pagination' => $pagination,
                 'pagesCount' => $pagesCount,
+                'navLinks' => $navLinks,
             ]);
     }
 
@@ -460,6 +277,7 @@ class ContentController extends AbstractUsersAuthController
         $cities = new Content();
         $hotel = $cities->getHotel((string)$city_alias, (string)$hotel_alias, (int) $hotel_id);
         $photos = $cities->getPhoto((int) $hotel_id, 'hotels');
+        $navLinks = $cities->getNavLinks((string) $city_alias);
         //комменты
         $limit = 60;
         if (empty($_GET['start'])) {
@@ -484,13 +302,15 @@ class ContentController extends AbstractUsersAuthController
         );
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
         $script = '<script src="/../templates/main/js/mapMemorial.js"></script>' . PHP_EOL;
-        $script .= '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
-        $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
-        $style = '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
-        $style .= '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $style = '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
         $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        if(!empty($photos)){
+            $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
+            $style .= '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
+            $script .= '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
+        }
         if (!empty($this->user)) {
             $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
         }
@@ -500,8 +320,8 @@ class ContentController extends AbstractUsersAuthController
         $this->view->renderHtml('content/hotel.php',
             [
                 'title' => $hotel->name.' '.$hotel->cityName.' - отзывы',
-                'metaKey' => $hotel->keywords,
-                'metaDesc' => $hotel->descr,
+                'metaKey' => 'Гостиница '.$hotel->name.' отзывы, адрес, расположение на карте, телефон',
+                'metaDesc' => 'Гостиница '.$hotel->name.' отзывы, адрес, телефон',
                 'addresses' => $addresses,
                 'hotel' => $hotel,
                 'photos' => $photos,
@@ -510,7 +330,176 @@ class ContentController extends AbstractUsersAuthController
                 'object_group' => 'hotel',
                 'pagination' => $pagination,
                 'pagesCount' => $pagesCount,
+                'navLinks' => $navLinks,
             ]);
     }
 
+    /**
+     * @throws NotFoundException
+     */
+    public function restaurants($city_alias)
+    {
+        $cities = new Content();
+        $city = $cities->getCity((string) $city_alias);
+        $navLinks = $cities->getNavLinks((string) $city_alias);
+        $cityGenitive = $cities->getCityGenitive((string) $city->name);
+        $restaurants = $cities->getRestaurants((int) $city->id);
+        $addresses = array();
+        if(!empty($restaurants)){
+            foreach ($restaurants as $restaurant){
+                $addresses[] = array(
+                    'geo_lat' => $restaurant->geo_lat,
+                    'geo_long' => $restaurant->geo_long,
+                    'url' => '/'.$city_alias .'/restaurant-'. $restaurant->alias.'-'. $restaurant->id,
+                    'text' => $restaurant->name,
+                    'icon' => 'islands#lightBlueStretchyIcon'
+                );
+            }
+        }else{
+            preg_match('~\[(.*)\, (.*)\], controls~msU', $city->map, $geo);
+            $addresses[] = array(
+                'geo_lat' => $geo[1],
+                'geo_long' => $geo[2],
+                'url' => '/',
+                'text' => '',
+                'icon' => 'islands#lightBlueStretchyIcon'
+            );
+        }
+
+        $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
+        $script = '<script src="/../templates/main/js/map.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/restaurants.js"></script>' . PHP_EOL;
+        $this->view->setVar('script', $script);
+        $this->view->setVar('scriptNoCompress', $scriptNoCompress);
+        $this->view->renderHtml('content/restaurants.php',
+            [
+                'title' => 'Рестораны '.$cityGenitive->genitive.' - отзывы, цены',
+                'metaKey' => 'Рестораны, '.$cityGenitive->genitive.', отзывы, цены',
+                'metaDesc' => 'Отзывы о ресторанах и кафе '.$cityGenitive->genitive.', расположение на карте, цены',
+                'city' => $city,
+                'navLinks' => $navLinks,
+                'city_alias' => $city_alias,
+                'restaurants' => $restaurants,
+                'cityGenitive' => $cityGenitive,
+                'addresses' => $addresses,
+            ]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function restaurant($city_alias, $restaurant_alias, $restaurant_id)
+    {
+        $cities = new Content();
+        $restaurant = $cities->getRestaurant((string)$city_alias, (string)$restaurant_alias, (int) $restaurant_id);
+        $photos = $cities->getPhoto((int) $restaurant_id, 'restaurants');
+        $navLinks = $cities->getNavLinks((string) $city_alias);
+        //комменты
+        $limit = 60;
+        if (empty($_GET['start'])) {
+            $page = 1;
+            $offset = $start = 0;
+        } else {
+            if (is_numeric($_GET['start'])) {
+                $page = $start = (int)$_GET['start'];
+                $offset = ($_GET['start'] - 1) * $limit;
+            } else {
+                throw new NotFoundException();
+            }
+        }
+        $comments = Comments::getComments('restaurant', $restaurant->id, $limit, $offset, $start, $this->user);
+        $pagesCount = $comments['total'];
+        $pagination = new Pagination($page, $limit, $pagesCount);
+        $addresses = array(
+            'geo_lat' => $restaurant->geo_lat,
+            'geo_long' => $restaurant->geo_long,
+            'text' => $restaurant->name,
+            'icon' => 'islands#lightBlueStretchyIcon'
+        );
+        $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
+        $script = '<script src="/../templates/main/js/mapMemorial.js"></script>' . PHP_EOL;
+        $style = '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        if(!empty($photos)){
+            $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
+            $style .= '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
+            $script .= '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
+        }
+        if (!empty($this->user)) {
+            $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
+        }
+        $this->view->setVar('script', $script);
+        $this->view->setVar('scriptNoCompress', $scriptNoCompress);
+        $this->view->setVar('style', $style);
+        $this->view->renderHtml('content/restaurant.php',
+            [
+                'title' => $restaurant->name.' '.$restaurant->cityName.' - отзывы',
+                'metaKey' => 'Ресторан '.$restaurant->name.' отзывы, адрес, расположение на карте, телефон',
+                'metaDesc' => 'Ресторан '.$restaurant->name.' отзывы, адрес, телефон',
+                'addresses' => $addresses,
+                'restaurant' => $restaurant,
+                'photos' => $photos,
+                'object_id' => $restaurant->id,
+                'comments' => $comments,
+                'object_group' => 'restaurant',
+                'pagination' => $pagination,
+                'pagesCount' => $pagesCount,
+                'navLinks' => $navLinks,
+            ]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function znakomstva($city_alias)
+    {
+        $cities = new Content();
+        $city = $cities->getCity((string)$city_alias);
+        $datings = new Dating();
+        $Fields = $datings->dating($city);
+
+        $navLinks = $cities->getNavLinks((string) $city_alias);
+        //комменты
+        $limit = 60;
+        if (empty($_GET['start'])) {
+            $page = 1;
+            $offset = $start = 0;
+        } else {
+            if (is_numeric($_GET['start'])) {
+                $page = $start = (int)$_GET['start'];
+                $offset = ($_GET['start'] - 1) * $limit;
+            } else {
+                throw new NotFoundException();
+            }
+        }
+        $comments = Comments::getComments('dating', $city->id, $limit, $offset, $start, $this->user);
+        $pagesCount = $comments['total'];
+        $pagination = new Pagination($page, $limit, $pagesCount);
+
+        $style = '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $script = '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        if (!empty($this->user)) {
+            $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
+        }
+        $this->view->setVar('script', $script);
+        $this->view->setVar('style', $style);
+        $this->view->renderHtml('content/znakomstva.php',
+            [
+                'title' => 'Знакомства в '.$city->name_morphy.' без регистрации бесплатно',
+                'metaKey' => 'Знакомства, в, '.$city->name_morphy.', без, регистрации, бесплатно',
+                'metaDesc' => 'Знакомства в '.$city->name_morphy.' без регистрации бесплатно',
+                'Fields' => $Fields,
+                'object_id' => $city->id,
+                'comments' => $comments,
+                'object_group' => 'dating',
+                'pagination' => $pagination,
+                'pagesCount' => $pagesCount,
+                'navLinks' => $navLinks,
+                'city' => $city,
+            ]);
+    }
 }

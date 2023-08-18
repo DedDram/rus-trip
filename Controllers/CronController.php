@@ -58,6 +58,8 @@ class CronController extends AbstractUsersAuthController
                 $url = Content::getUrlMemorial((int)$_GET['object_id']);
             }elseif ($_GET['object_group'] == 'hotel') {
                 $url = Content::getUrlHotel((int)$_GET['object_id']);
+            }elseif ($_GET['object_group'] == 'restaurant') {
+                $url = Content::getUrlRestaurant((int)$_GET['object_id']);
             }else {
                 $url = '/';
             }

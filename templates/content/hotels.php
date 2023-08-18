@@ -23,20 +23,20 @@
             });
         </script>
         <div id="map"></div>
-        <h1>Гостиницы <?php echo $cityGenitive->genitive; ?></h1>
+        <h1>Гостиницы и отели <?php echo $cityGenitive->genitive; ?></h1>
         <!--module.db:breadcrumbs-social-buttons-->
         <div>
             <?php
             if (preg_match('~\[hotels\](.*)html(.*)"(<p>(.*)</p>)"~msU', $city->meta, $matches)) {
                 echo trim($matches[3]);
             }
-            $i=0;
+            $i = 0;
             ?>
         </div>
         <?php foreach ($hotels as $hotel): ?>
             <?php
             $i++;
-            if($i>20){
+            if ($i > 20) {
                 break;
             }
             $value = ($hotel->vote > 0) ? round($hotel->rate / $hotel->vote, 2) : 0;
@@ -48,7 +48,9 @@
                 <div class="city_rating_wrapper">
                     <div class="rating_wrapper" data-rating-width="<?php echo $width; ?>%" itemprop="aggregateRating"
                          itemscope="<?php echo $hotel->name; ?>" itemtype="https://schema.org/AggregateRating">
-                        <div class="rating_stars"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><div class="rating_value" style="width:<?php echo $width; ?>%"></div></div>
+                        <div class="rating_stars"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b>
+                            <div class="rating_value" style="width:<?php echo $width; ?>%"></div>
+                        </div>
                         <span itemprop="itemReviewed"><?php echo $hotel->name; ?></span>
                         (<b itemprop="ratingCount"><?php echo $word; ?></b>)
                         <meta itemprop="ratingValue" content="<?php echo $value; ?>">
@@ -72,10 +74,12 @@
             </div>
         <?php endforeach; ?>
         <div id="hotel-container"></div>
-        <div id="load-more-wrapper">
-        <button class="load-more-button">Показать еще</button>
-            <span id="city_id" style="display: none"><?php echo $city->id; ?></span>
-        </div>
+        <?php if (count($hotels)>20): ?>
+            <div id="load-more-wrapper">
+                <button class="load-more-button">Показать еще</button>
+                <span id="city_id" style="display: none"><?php echo $city->id; ?></span>
+            </div>
+        <?php endif; ?>
     </article>
     <span class="clear"></span>
     </section>

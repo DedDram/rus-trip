@@ -15,9 +15,13 @@ return [
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/memorial-([a-z\-]+)-(\d+)($|\?(.*)$)~', [\Controllers\ContentController::class, 'memorial']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/hotels$~', [\Controllers\ContentController::class, 'hotels']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/hotel-([a-z\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'hotel']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restaurants$~', [\Controllers\ContentController::class, 'restaurants']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restaurant-([a-z\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'restaurant']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/znakomstva$~', [\Controllers\ContentController::class, 'znakomstva']],
     //POST запросы
     ['POST', '~^/post/comment$~', [\Controllers\PostCommentsController::class, 'getResponse']],
     ['POST', '~^/hotels$~', [\Controllers\ContentController::class, 'getResponse']],
+    ['POST', '~^/restaurants$~', [\Controllers\ContentController::class, 'getResponse']],
     ['POST', '~/post/error$~', [\Controllers\PostErrorController::class, 'getResponse']],
     //пользователи, регистрация, авторизация
     ['GET|POST', '~^/users/(\d+)/activate/(.+)$~', [\Controllers\UsersController::class, 'activate']],
