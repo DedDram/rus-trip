@@ -42,8 +42,26 @@
                rel="nofollow">Нашли ошибку?</a><br>
         </div>
         <?php foreach ($memorials as $memorial): ?>
+            <?php
+            $value = ($memorial->vote > 0) ? round($memorial->rate / $memorial->vote, 2) : 0;
+            $width = round($value / 5 * 100, 2);
+            $word = \Services\stString::declension($memorial->vote, array('отзыв', 'отзыва', 'отзывов'));
+            ?>
         <div class="separator"></div>
             <div class="list-entry regular-list-entry">
+                <div class="city_rating_wrapper">
+                    <div class="rating_wrapper" data-rating-width="<?php echo $width; ?>%" itemprop="aggregateRating"
+                         itemscope="<?php echo $memorial->name; ?>" itemtype="https://schema.org/AggregateRating">
+                        <div class="rating_stars"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b>
+                            <div class="rating_value" style="width:<?php echo $width; ?>%"></div>
+                        </div>
+                        <meta itemprop="itemReviewed" content="<?php echo $memorial->name; ?>">
+                        (<b itemprop="ratingCount"><?php echo $word; ?></b>)
+                        <meta itemprop="ratingValue" content="<?php echo $value; ?>">
+                        <meta itemprop="bestRating" content="5">
+                        <meta itemprop="worstRating" content="0">
+                    </div>
+                </div>
                 <strong><a href="/<?php echo $city_alias; ?>/memorial-<?php echo $memorial->alias; ?>-<?php echo $memorial->id; ?>"><?php echo $memorial->name; ?></a></strong>
                 <span>Адрес: <span itemprop="address"><?php echo $memorial->address; ?></span></span><br>
                  <?php if (!empty($memorial->thumb)): ?>

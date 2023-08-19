@@ -53,22 +53,19 @@ class Content
         ));
     }
 
-    /**
-     * @throws NotFoundException
-     */
     public function getCityGenitive(string $cityName)
     {
         $result = $this->db->query("SELECT * FROM `cities_names` WHERE `nominative` = ".$this->db->quote($cityName));
         if(!empty($result)){
             return $result[0];
         }else{
-            throw new NotFoundException();
+            return array();
         }
     }
 
     public function getMemorials(int $cityId)
     {
-        return $this->db->query("SELECT t1.*, t3.descr, t3.thumb FROM `memorials` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'memorials' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id");
+        return $this->db->query("SELECT t1.*, t3.descr, t3.thumb FROM `memorials` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'memorials' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id ORDER BY t1.average  DESC;");
     }
 
     /**
@@ -116,7 +113,7 @@ class Content
             foreach ($result as $hotel){
                 $value = ($hotel->comments > 0) ? round($hotel->average / $hotel->comments, 2) : 0;
                 $width = round($value / 5 * 100, 2);
-                $word = \Services\stString::declension($hotel->comments, array('голос', 'голоса', 'голосов'));
+                $word = \Services\stString::declension($hotel->comments, array('отзыв', 'отзыва', 'отзывов'));
                 $html .= '<div class="separator"></div>
             <div class="list-entry regular-list-entry hotel-entry">
                 <div class="city_rating_wrapper">
@@ -161,7 +158,7 @@ class Content
             foreach ($result as $restaurant){
                 $value = ($restaurant->comments > 0) ? round($restaurant->average / $restaurant->comments, 2) : 0;
                 $width = round($value / 5 * 100, 2);
-                $word = \Services\stString::declension($restaurant->comments, array('голос', 'голоса', 'голосов'));
+                $word = \Services\stString::declension($restaurant->comments, array('отзыв', 'отзыва', 'отзывов'));
                 $html .= '<div class="separator"></div>
             <div class="list-entry regular-list-entry hotel-entry">
                 <div class="city_rating_wrapper">
@@ -216,6 +213,11 @@ class Content
         return $this->db->query("SELECT t1.*, t3.descr, t3.thumb FROM `restaurants` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id LEFT JOIN `photos` as t3 on t3.object_id = t1.id and t3.object_group = 'restaurants' WHERE t2.id = ".$this->db->quote($cityId)." GROUP BY t1.id ORDER BY t1.average  DESC;");
     }
 
+    public function getPhotos(int $object_id, string $object_group)
+    {
+        return $this->db->query("SELECT * FROM `photos` WHERE object_id= ".$this->db->quote($object_id)." AND object_group=".$this->db->quote($object_group));
+    }
+
     /**
      * @throws NotFoundException
      */
@@ -256,7 +258,7 @@ class Content
     public static function getUrlHotel(int $hotel_id): string
     {
         $db = Db::getInstance();
-        $result = $db->query("SELECT t2.alias as cityAlias,t1.alias FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id WHERE t1.id = ".$db->quote($memorial_id));
+        $result = $db->query("SELECT t2.alias as cityAlias,t1.alias FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id WHERE t1.id = ".$db->quote($hotel_id));
         if(!empty($result)){
             return '/'.$result[0]->cityAlias.'/hotel-'.$result[0]->alias.'-'.$hotel_id;
         }else{
@@ -267,7 +269,7 @@ class Content
     public static function getUrlRestaurant(int $restaurant_id): string
     {
         $db = Db::getInstance();
-        $result = $db->query("SELECT t2.alias as cityAlias,t1.alias FROM `restaurants` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id WHERE t1.id = ".$db->quote($memorial_id));
+        $result = $db->query("SELECT t2.alias as cityAlias,t1.alias FROM `restaurants` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id WHERE t1.id = ".$db->quote($restaurant_id));
         if(!empty($result)){
             return '/'.$result[0]->cityAlias.'/restaurant-'.$result[0]->alias.'-'.$restaurant_id;
         }else{

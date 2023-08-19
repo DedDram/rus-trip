@@ -42,7 +42,7 @@
                 }
                 $value = ($restaurant->vote > 0) ? round($restaurant->rate / $restaurant->vote, 2) : 0;
                 $width = round($value / 5 * 100, 2);
-                $word = \Services\stString::declension($restaurant->vote, array('голос', 'голоса', 'голосов'));
+                $word = \Services\stString::declension($restaurant->vote, array('отзыв', 'отзыва', 'отзывов'));
                 ?>
                 <div class="separator"></div>
                 <div class="list-entry regular-list-entry hotel-entry">

@@ -74,6 +74,7 @@
                 </tr>
             </table>
         </form>
+        <?php include __DIR__ . '/../comments/comments.php'; ?>
     </article>
     <span class="clear"></span>
     </section>

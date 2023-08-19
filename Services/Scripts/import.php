@@ -47,7 +47,7 @@ function transliterate($string): string
 
 
 
-$sqlList = $conn->query("SELECT * FROM `cities` ");
+$sqlList = $conn->query("SELECT id,name from cities where id not in (Select city_id from memorials) ");
 $result = $sqlList->fetchAll(PDO::FETCH_ASSOC);
 if(!empty($result)){
     foreach ($result as $item){
@@ -55,14 +55,17 @@ if(!empty($result)){
         var_dump($city);
 
 //проверяем есть ли новые отели для этого города
-        $sql2 = $conn->query("SELECT * FROM `objects` WHERE `Город` = '{$city}' AND `Подрубрика` LIKE '%рестор%'");
+        $sql2 = $conn->query("SELECT * FROM `objects` WHERE `Город` = '{$city}'");
         $result2 = $sql2->fetchAll(PDO::FETCH_ASSOC);
 //если есть отели для этого города удаляем старые отели и записываем новые
         if(!empty($result2)){
-            $sql = "DELETE FROM `restaurants` WHERE `city_id` = '{$item['id']}'";
-            $conn->query($sql);
+            //$sql = "DELETE FROM `restaurants` WHERE `city_id` = '{$item['id']}'";
+           // $conn->query($sql);
 
             foreach ($result2 as $value){
+                if(mb_strlen($value['Название'], "UTF-8") > 130){
+                    continue;
+                }
                 $alias = transliterate($value['Название']);
                 $value['Название'] = addslashes($value['Название']);
                 $city = $value['Город'];
@@ -88,7 +91,7 @@ if(!empty($result)){
                     if(preg_match('~(.*)\,~', $value['Email'], $match0)){
                         $email = $match0[1];
                     }
-                    if(mb_strlen($email, "UTF-8") > 200){
+                    if(mb_strlen($email, "UTF-8") > 150){
                         $email = 'нет данных';
                     }
                 }else{
@@ -106,21 +109,15 @@ if(!empty($result)){
                 }else{
                     $website = 'нет данных';
                 }
-                if(!empty($value['vkontakte'])){
-                    $vk = $value['vkontakte'];
-                    if(preg_match('~(.*)\,~', $value['vkontakte'], $match2)){
-                        $vk = $match2[1];
-                    }
-                    if(mb_strlen($vk, "UTF-8") > 200){
-                        $vk = 'нет данных';
-                    }
+                if(!empty($value['yandex_id'])){
+                    $yandex_id = $value['yandex_id'];
                 }else{
-                    $vk = 'нет данных';
+                    $yandex_id = '';
                 }
 
 
-                $sql2 = "INSERT INTO `restaurants` (`id`, `name`, `alias`, `about`, `address`, `phone`, `email`, `website`, `vk`, `city_id`, `rate`, `vote`, `comments`, `geo_lat`, `geo_long`, `average`, `row_created`, `yandex_id`) VALUES
-(NULL, '{$value['Название']}', '{$alias}', '{$value['Время работы']}', '{$address}', '{$phone}', '{$email}', '{$website}', '{$vk}', '{$item['id']}', 0, 0, 0, '{$value['Широта']}', '{$value['Долгота']}', 0, CURRENT_TIMESTAMP, '{$value['yandex_id']}');";
+                $sql2 = "INSERT INTO `memorials` (`id`, `name`, `alias`, `about`, `address`, `phone`, `email`, `website`, `yandex_id`, `city_id`, `rate`, `vote`, `comments`, `geo_lat`, `geo_long`, `average`, `row_created`, `sid`) VALUES
+(NULL, '{$value['Название']}', '{$alias}', '{$value['Время работы']}', '{$address}', '{$phone}', '{$email}', '{$website}', '{$yandex_id}', '{$item['id']}', 0, 0, 0, '{$value['Широта']}', '{$value['Долгота']}', 0, CURRENT_TIMESTAMP, 0);";
 
                 $conn->query($sql2);
             }

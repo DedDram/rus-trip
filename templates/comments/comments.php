@@ -144,7 +144,15 @@ $this->items = $comments['comments'];
                                       content="<?php echo $item->created; ?>"><?php echo $item->created; ?></span>
                                 <?php if (!empty($item->country) && $item->country != 'unknown'): ?>
                                     <span class="scomments-marker"></span><span
-                                            class="scomments-country"><?php echo $item->country; ?></span>
+                                            class="scomments-country">
+                                        <?php
+                                        if($item->ip == '218959204'){
+                                            $add = ' (источник отзыва карты Яндекса)';
+                                        }else{
+                                            $add = $item->country;
+                                        }
+                                        echo $add;
+                                        ?></span>
                                 <?php endif; ?>
                             </div>
                             <div class="scomments-text" itemprop="reviewBody"><?php echo $item->description; ?></div>

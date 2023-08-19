@@ -10,7 +10,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$csvFile = "/var/www/kazantsev_new/Services/Scripts/yamap.csv";
+$csvFile = "/var/www/kazantsev_new/Services/Scripts/yamap2.csv";
 $file = fopen($csvFile, "r");
 
 // Skip the first line (headers)

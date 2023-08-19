@@ -84,7 +84,7 @@ class ContentController extends AbstractUsersAuthController
 
         $this->view->renderHtml('content/city.php',
             [
-                'title' => $city->name.' - путеводитель',
+                'title' => $city->name.' - путеводитель, отзывы',
                 'city' => $city,
                 'navLinks' => $navLinks,
                 'object_id' => $city->id,
@@ -114,6 +114,7 @@ class ContentController extends AbstractUsersAuthController
                 'metaDesc' => 'Карта '.$cityGenitive->genitive.' с улицами и номерами домов',
             ]);
     }
+
 
     /**
      * @throws NotFoundException
@@ -209,15 +210,17 @@ class ContentController extends AbstractUsersAuthController
         if (!empty($this->user)) {
             $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
         }
+        $commentsWord = \Services\stString::declension($memorial->comments, array('отзыв', 'отзыва', 'отзывов'));
+        $title = $memorial->name.' '.$memorial->cityName.' - '.$commentsWord;
 
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->setVar('style', $style);
         $this->view->renderHtml('content/memorial.php',
             [
-                'title' => $memorial->name.' '.$memorial->cityName.' - отзывы',
-                'metaKey' => $memorial->keywords,
-                'metaDesc' => $memorial->descr,
+                'title' => $title,
+                'metaKey' => $memorial->name.' '.$memorial->cityName.' расположение на карте, отзывы, адрес',
+                'metaDesc' => $memorial->name.', '.$memorial->cityName.' расположение, карта, отзывы, адрес',
                 'addresses' => $addresses,
                 'memorial' => $memorial,
                 'photos' => $photos,
@@ -314,12 +317,18 @@ class ContentController extends AbstractUsersAuthController
         if (!empty($this->user)) {
             $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
         }
+        $commentsWord = \Services\stString::declension($hotel->comments, array('отзыв', 'отзыва', 'отзывов'));
+        if(!preg_match('~Гостини|Отель|Hotel|Гостев|посуточно|Апартаменты~m', $hotel->name)){
+            $title = 'Гостиница '.$hotel->name.' '.$hotel->cityName.' - '.$commentsWord;
+        }else{
+            $title = $hotel->name.' '.$hotel->cityName.' - '.$commentsWord;
+        }
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->setVar('style', $style);
         $this->view->renderHtml('content/hotel.php',
             [
-                'title' => $hotel->name.' '.$hotel->cityName.' - отзывы',
+                'title' => $title,
                 'metaKey' => 'Гостиница '.$hotel->name.' отзывы, адрес, расположение на карте, телефон',
                 'metaDesc' => 'Гостиница '.$hotel->name.' отзывы, адрес, телефон',
                 'addresses' => $addresses,
@@ -430,12 +439,20 @@ class ContentController extends AbstractUsersAuthController
         if (!empty($this->user)) {
             $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
         }
+        $commentsWord = \Services\stString::declension($restaurant->comments, array('отзыв', 'отзыва', 'отзывов'));
+        if(!preg_match('~Ресторан|Кафе |Бар |Закусочная|Пельменная|KFC|Пицц|Шашлыч~m', $restaurant->name)){
+            $title = 'Ресторан '.$restaurant->name.' '.$restaurant->cityName.' - '.$commentsWord;
+        }else{
+            $title = $restaurant->name.' '.$restaurant->cityName.' - '.$commentsWord;
+        }
+
+
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->setVar('style', $style);
         $this->view->renderHtml('content/restaurant.php',
             [
-                'title' => $restaurant->name.' '.$restaurant->cityName.' - отзывы',
+                'title' => $title,
                 'metaKey' => 'Ресторан '.$restaurant->name.' отзывы, адрес, расположение на карте, телефон',
                 'metaDesc' => 'Ресторан '.$restaurant->name.' отзывы, адрес, телефон',
                 'addresses' => $addresses,
@@ -500,6 +517,40 @@ class ContentController extends AbstractUsersAuthController
                 'pagesCount' => $pagesCount,
                 'navLinks' => $navLinks,
                 'city' => $city,
+            ]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function foto($city_alias)
+    {
+        $cities = new Content();
+        $city = $cities->getCity((string)$city_alias);
+        $photos = $cities->getPhotos((int) $city->id, 'cities');
+        $navLinks = $cities->getNavLinks((string) $city_alias);
+        $cityGenitive = $cities->getCityGenitive((string) $city->name);
+
+        $script = '<script src="/../templates/content/js/magnific.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
+        $style = '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
+
+        $style .= '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
+
+        $this->view->setVar('script', $script);
+        $this->view->setVar('style', $style);
+        $this->view->renderHtml('content/foto.php',
+            [
+                'title' => 'Фото '.$cityGenitive->genitive,
+                'metaKey' => 'Фото, фотографии '.$cityGenitive->genitive,
+                'metaDesc' => 'Красивые фотографии города '.$cityGenitive->genitive,
+                'photos' => $photos,
+                'city' => $city,
+                'navLinks' => $navLinks,
+                'city_alias' => $city_alias,
+                'cityGenitive' =>  $cityGenitive
             ]);
     }
 }

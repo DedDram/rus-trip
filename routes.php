@@ -18,6 +18,7 @@ return [
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restaurants$~', [\Controllers\ContentController::class, 'restaurants']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restaurant-([a-z\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'restaurant']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/znakomstva$~', [\Controllers\ContentController::class, 'znakomstva']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/foto$~', [\Controllers\ContentController::class, 'foto']],
     //POST запросы
     ['POST', '~^/post/comment$~', [\Controllers\PostCommentsController::class, 'getResponse']],
     ['POST', '~^/hotels$~', [\Controllers\ContentController::class, 'getResponse']],
