@@ -36,4 +36,6 @@ return [
     ['GET', '~^/comments\?task=unsubscribe&object_group=([a-z]+)&object_id=(\d+)$~', [\Controllers\UsersController::class, 'getResponse']],
     //Cron
     ['GET', '~^/cron/comments\?(.*)$~', [\Controllers\CronController::class, 'getResponse']],
+    //Угадывание городов
+    ['GET', '~^/guess_the_city$~', [\Controllers\ContentController::class, 'guessCity']],
 ];

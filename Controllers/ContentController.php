@@ -205,6 +205,7 @@ class ContentController extends AbstractUsersAuthController
 
         $style .= '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
         $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/guess_the_city.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
         if (!empty($this->user)) {
@@ -552,5 +553,15 @@ class ContentController extends AbstractUsersAuthController
                 'city_alias' => $city_alias,
                 'cityGenitive' =>  $cityGenitive
             ]);
+    }
+
+    public function guessCity()
+    {
+        $cities = new Content();
+        $citiesRandom = $cities->getRandomCity();
+
+        $this->view->renderHtml('json/json.php', [
+            'data' => $citiesRandom,
+        ]);
     }
 }

@@ -17,11 +17,8 @@ $(document).ready(function() {
         }
     });
 
-    $('.toggleMenu').on('click', function() {
-        // Получаем элемент меню
-        var menu2 = $('#menu2');
-
-        // Переключаем видимость меню
-        menu2.toggleClass('active');
+    $(".toggleMenu").click(function(e) {
+        e.preventDefault();
+        $("#menu2").toggleClass("menu-active");
     });
 });

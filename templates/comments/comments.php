@@ -278,12 +278,14 @@ $this->items = $comments['comments'];
                         <?php endif; ?>
                     </ul>
                     <!--/noindex-->
+                    <div class="form-wrapper">
                     <?php if (!empty($this->item)): ?>
                         <textarea id="description" name="description" style="width: 99%; height: 150px;"><blockquote><a href="#scomment-<?php echo $this->item->id; ?>">#<?php echo $this->num; ?></a> <?php echo mb_substr($this->item->description, 0, 100, 'UTF-8'); ?></blockquote>&nbsp;</textarea>
                     <?php else: ?>
                         <textarea id="description" name="description" style="width: 99%; height: 150px;"></textarea>
                     <?php endif; ?>
-
+                    <div class="quiz-wrapper"></div>
+                    </div>
                     <?php if (!empty($user)): ?>
                         <div style="margin: 10px 0;">
                             <?php if (!empty($this->subscribe)): ?>

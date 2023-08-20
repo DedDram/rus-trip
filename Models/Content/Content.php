@@ -276,4 +276,19 @@ class Content
             return '/';
         }
     }
+
+    public function getRandomCity(): array
+    {
+        $cities = $this->db->query("SELECT c.id, c.name, c.alias FROM cities c JOIN ( SELECT `id` FROM cities WHERE CHAR_LENGTH(name) <= 20 ORDER BY RAND() LIMIT 4 ) r ON c.id = r.id");
+        $city = $cities[array_rand($cities)];
+        $thumb = $this->db->query("SELECT thumb,photo AS full FROM photos WHERE object_id=".$this->db->quote($city->id)." AND object_group='cities' limit 1");
+
+        return array(
+            'cities' => $cities,
+            'answer' => $city,
+            'photo' => $thumb
+        );
+
+    }
+
 }
