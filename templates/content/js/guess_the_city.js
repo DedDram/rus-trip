@@ -11,7 +11,7 @@ $(function () {
 
 				var photoData = result.photo[0];
 				var html = '<h6>Угадай город по фото</h6>'
-					+ '<img src="/' + photoData[photo_quality] + '" class="form-quiz-photo-' + photo_quality + '" /><br/>';
+					+ '<img src="/' + photoData[photo_quality] + '" loading="lazy" class="form-quiz-photo-' + photo_quality + '" /><br/>';
 
 				for (var i = 0; i < result.cities.length; i++) {
 					var city = result.cities[i];
@@ -20,12 +20,7 @@ $(function () {
 
 				var wrapper = $('<div/>').addClass('form-quiz-wrapper').html(html);
 
-				// Размещаем викторину после textarea на десктопе и под ним на мобильных
-				if ($(window).width() > 767) {
-					$('#description').after(wrapper);
-				} else {
-					$('#description').append(wrapper);
-				}
+				$('.quiz-wrapper').append(wrapper);
 
 				wrapper.find('button').on('click', function(e) {
 					e.preventDefault();

@@ -64,8 +64,8 @@
                             }
                         } else {
                             echo '<li><a href="/" class="nav-active">Главная</a></li>
-                    <li><a href="/kontakty.html">Обратная связь</a></li>
-                    <li><a href="/kak-proehat-ot-i-do.html">Как проехать ОТ и ДО</a></li>';
+                    <li><a href="/contact">Обратная связь</a></li>
+                    <li><a href="/kak-proehat-ot-i-do">Как проехать ОТ и ДО</a></li>';
                         }
                         ?>
                     </ul>

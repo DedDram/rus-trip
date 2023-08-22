@@ -8,7 +8,7 @@
                 <span> »
                     <span itemscope="" itemtype="https://schema.org/WebPage">
                         <span itemprop="breadcrumb">
-                            <span>Рестораны и кафе</span>
+                            <span>Знакомства</span>
                         </span>
                     </span>
                 </span>

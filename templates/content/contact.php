@@ -1,13 +1,26 @@
 <?php include __DIR__ . '/../header.php'; ?>
-<div id="telo">
-    <div style="position:relative;background-color:#ffffff; margin:0 auto 0 auto;">
-        <div id="main">
-            <div id="aCenter">
-                <div itemprop="articleBody">
-                    <p><img class="foto" style="float: left;" src="/images/Brian.jpg" alt="Brian">Chief Editor - Brian Collins</p>
-                    <p>By all means write to <a href="mailto:info@rus-trip.ru">info@rus-trip.ru</a></p> </div>
-            </div>
+    <article class="box">
+        <div class="breadcrumbs">
+            <span itemscope="" itemtype="https://schema.org/WebPage">
+                <span itemprop="breadcrumb">
+                    <a href="/<?php echo $city_alias; ?>" itemprop="url"><span><?php echo $city->name; ?></span></a>
+                </span>
+                <span> »
+                    <span itemscope="" itemtype="https://schema.org/WebPage">
+                        <span itemprop="breadcrumb">
+                            <span>Обратная связь</span>
+                        </span>
+                    </span>
+                </span>
+            </span>
         </div>
-    </div>
+        <h1>Контакты</h1>
+        <!--module.db:breadcrumbs-social-buttons-->
+        <div style="min-height: 500px">
+            <p>По всем вопросам пишите на info[СОБАКА]rus-trip.ru</p>
+        </div>
+    </article>
+    <span class="clear"></span>
+    </section>
 
     <?php include __DIR__ . '/../footer.php'; ?>

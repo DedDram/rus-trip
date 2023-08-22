@@ -5,13 +5,17 @@ namespace Controllers;
 use Exceptions\ForbiddenException;
 use Models\Cron\Comments;
 use Models\Content\Content;
+use Models\Cron\SiteMap;
 use Services\PHPMailer\Exception;
 
 class CronController extends AbstractUsersAuthController
 {
 
+    private string $server_ip;
+
     public function __construct()
     {
+        $this->server_ip = (require __DIR__ . '/../settings.php')['main']['server_ip'];
         parent::__construct();
     }
 
@@ -76,5 +80,20 @@ class CronController extends AbstractUsersAuthController
         } else {
             header('Location: /users/login', true, 301);
         }
+    }
+
+    /**
+     * @throws ForbiddenException
+     */
+    public function siteMap()
+    {
+        if ($this->server_ip != $_SERVER['REMOTE_ADDR']) {
+            throw new ForbiddenException();
+        }
+        $data = [];
+        new SiteMap;
+        $this->view->renderHtml('json/json.php', [
+            'data' => $data,
+        ]);
     }
 }

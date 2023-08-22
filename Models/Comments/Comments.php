@@ -58,7 +58,14 @@ class Comments extends ActiveRecordEntity
         if (!empty($_POST['object_id'])) {
             $this->object_id = (int)$_POST['object_id'];
         }
-        if (!empty($_POST['object_group']) && ($_POST['object_group'] === 'city' || $_POST['object_group'] === 'memorial' || $_POST['object_group'] === 'hotel' || $_POST['object_group'] === 'restaurant')) {
+        if (!empty($_POST['object_group'])
+            && ($_POST['object_group'] === 'city' ||
+                $_POST['object_group'] === 'memorial' ||
+                $_POST['object_group'] === 'hotel' ||
+                $_POST['object_group'] === 'restaurant' ||
+                $_POST['object_group'] === 'dating' ||
+                $_POST['object_group'] === 'pages'))
+        {
             $this->object_group = $_POST['object_group'];
         }
 
@@ -610,6 +617,14 @@ class Comments extends ActiveRecordEntity
             $item = $this->db->query("SELECT t1.*, t2.alias as cityAlias,t2.name as cityName FROM `restaurants` as t1 INNER JOIN `cities` as t2 on t2.id = t1.city_id WHERE t1.id = ".$this->db->quote($object_id));
             $item['title'] = $item[0]->name;
             $item['url'] = '/' . $item[0]->cityAlias. '/restaurant-'.$item[0]->alias.'-'.$item[0]->id;
+        }
+        if ($object_group == 'dating') {
+            $item = $this->db->query("SELECT * FROM `cities` WHERE `id` = ".$this->db->quote($object_id).";");
+            $item['title'] = $item[0]->name;
+            $item['url'] = '/' . $item[0]->alias.'/znakomstva';
+        }
+        if ($object_group == 'pages') {
+            $item['url'] = '/kak-proehat-ot-i-do';
         }
         return $item;
     }

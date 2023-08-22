@@ -50,6 +50,7 @@ class Content
             "{$alias}/restaurants" => 'Рестораны',
             "{$alias}/znakomstva" => 'Знакомства',
             "{$alias}/foto" => 'Фото',
+            "contact" => 'Обратная связь',
         ));
     }
 

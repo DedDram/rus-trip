@@ -12,7 +12,7 @@ $word = \Services\stString::declension($restaurant->comments, array('отзыв'
                 <span> »
                     <span itemscope="" itemtype="https://schema.org/WebPage">
                         <span itemprop="breadcrumb">
-                            <a href="/<?php echo $restaurant->cityAlias; ?>/memorials" itemprop="url"><span>Достопримечательности</span></a>
+                            <a href="/<?php echo $restaurant->cityAlias; ?>/memorials" itemprop="url"><span>Кафе, рестораны</span></a>
                         </span>
                     </span>
                 </span>
@@ -41,6 +41,13 @@ $word = \Services\stString::declension($restaurant->comments, array('отзыв'
             });
         </script>
         <div id="map"></div>
+        <div>
+            <a href="/posterror?id=<?php echo $restaurant->id; ?>&object_group=restaurant"
+               class="simplemodal"
+               data-width="450" data-height="380"
+               style="vertical-align: middle;float: right"
+               rel="nofollow">Нашли ошибку?</a><br>
+        </div>
         <div itemscope itemtype="https://schema.org/Restaurant">
             <p>
                 <?php echo $restaurant->about; ?>

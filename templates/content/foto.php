@@ -16,13 +16,22 @@
         </div>
         <h1>Красивые фотографии <?php echo $cityGenitive->genitive; ?></h1>
         <!--module.db:breadcrumbs-social-buttons-->
+        <div>
+            <a href="/posterror?id=<?php echo $city->id; ?>&object_group=foto"
+               class="simplemodal"
+               data-width="450" data-height="380"
+               style="vertical-align: middle;float: right"
+               rel="nofollow">Нашли ошибку?</a><br>
+        </div>
         <div id="photos-gallery">
             <?php foreach ($photos as $photo): ?>
-    <span itemscope itemtype="https://schema.org/ImageObject">
-	<img src="/<?php echo $photo->thumb; ?>" data-mfp-src="/<?php echo $photo->photo; ?>"
-         alt="<?php echo $photo->descr; ?>" loading="lazy" title="<?php echo $photo->descr; ?>" itemprop="thumbnail"/>
-	<meta itemprop="description" content="<?php echo $photo->descr; ?>"/>
-    </span>
+                <?php if (file_exists(__DIR__ . '/../../' . $photo->thumb)): ?>
+                    <span itemscope itemtype="https://schema.org/ImageObject">
+	                    <img src="/<?php echo $photo->thumb; ?>" data-mfp-src="/<?php echo $photo->photo; ?>"
+                             alt="<?php echo $photo->descr; ?>" loading="lazy" title="<?php echo $photo->descr; ?>" itemprop="thumbnail"/>
+	                            <meta itemprop="description" content="<?php echo $photo->descr; ?>"/>
+                        </span>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
         <?php

@@ -33,6 +33,13 @@
             $i = 0;
             ?>
         </div>
+        <div>
+            <a href="/posterror?id=<?php echo $city->id; ?>&object_group=restaurants"
+               class="simplemodal"
+               data-width="450" data-height="380"
+               style="vertical-align: middle;float: right"
+               rel="nofollow">Нашли ошибку?</a><br>
+        </div>
         <?php if (!empty($restaurants)): ?>
             <?php foreach ($restaurants as $restaurant): ?>
                 <?php

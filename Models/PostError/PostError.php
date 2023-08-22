@@ -32,6 +32,16 @@ class PostError
                 $link = Content::getUrlCity($id).'/memorials';
             }elseif ($_POST['object_group'] == 'memorial'){
                 $link = Content::getUrlMemorial($id);
+            }elseif ($_POST['object_group'] == 'hotels'){
+                $link = Content::getUrlCity($id).'/hotels';
+            }elseif ($_POST['object_group'] == 'hotel'){
+                $link = Content::getUrlHotel($id);
+            }elseif ($_POST['object_group'] == 'restaurants'){
+                $link = Content::getUrlCity($id).'/restaurants';
+            }elseif ($_POST['object_group'] == 'restaurant'){
+                $link = Content::getUrlRestaurant($id);
+            }elseif ($_POST['object_group'] == 'foto'){
+                $link = Content::getUrlCity($id).'/foto';
             }
         }
         if (!empty($_POST['name'])) {

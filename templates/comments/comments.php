@@ -146,9 +146,9 @@ $this->items = $comments['comments'];
                                     <span class="scomments-marker"></span><span
                                             class="scomments-country">
                                         <?php
-                                        if($item->ip == '218959204'){
+                                        if ($item->ip == '218959204') {
                                             $add = ' (источник отзыва карты Яндекса)';
-                                        }else{
+                                        } else {
                                             $add = $item->country;
                                         }
                                         echo $add;
@@ -158,15 +158,17 @@ $this->items = $comments['comments'];
                             <div class="scomments-text" itemprop="reviewBody"><?php echo $item->description; ?></div>
 
                             <?php if (!empty($item->images)): ?>
-                                <a href="#" data-id="<?php echo $item->id; ?>" class="scomments-item-images-toogle">Показать прикрепленное фото</a>
+                                <a href="#" data-id="<?php echo $item->id; ?>" class="scomments-item-images-toogle">Показать
+                                    прикрепленное фото</a>
                                 <div class="scomments-item-images"></div>
                             <?php endif; ?>
 
                             <?php if (!empty($user) && !empty($item->edit) && $user->getId() == $item->user_id): ?>
-                                <div class="scomments-button-edit"> <a class="scomments-control-edit" data-task="edit"
-                                                                       data-object-group="<?php echo $item->object_group; ?>"
-                                                                       data-object-id="<?php echo $item->object_id; ?>"
-                                                                       data-item-id="<?php echo $item->id; ?>" href="#">/ Редактировать отзыв</a>
+                                <div class="scomments-button-edit"><a class="scomments-control-edit" data-task="edit"
+                                                                      data-object-group="<?php echo $item->object_group; ?>"
+                                                                      data-object-id="<?php echo $item->object_id; ?>"
+                                                                      data-item-id="<?php echo $item->id; ?>" href="#">/
+                                        Редактировать отзыв</a>
                                 </div>
                             <?php endif; ?>
                             <!--noindex-->
@@ -178,9 +180,9 @@ $this->items = $comments['comments'];
                                 <div class="scomments-control">
                                     <div class="scomments-control-msg"></div>
                                     <a class="scomments-control-edit" data-task="edit"
-                                    data-object-group="<?php echo $item->object_group; ?>"
-                                    data-object-id="<?php echo $item->object_id; ?>"
-                                    data-item-id="<?php echo $item->id; ?>" href="#"></a>
+                                       data-object-group="<?php echo $item->object_group; ?>"
+                                       data-object-id="<?php echo $item->object_id; ?>"
+                                       data-item-id="<?php echo $item->id; ?>" href="#"></a>
                                     <a class="scomments-control-delete" data-task="remove"
                                        data-object-group="<?php echo $item->object_group; ?>"
                                        data-object-id="<?php echo $item->object_id; ?>"
@@ -197,7 +199,7 @@ $this->items = $comments['comments'];
                                        data-object-group="<?php echo $item->object_group; ?>"
                                        data-object-id="<?php echo $item->object_id; ?>"
                                        data-item-id="<?php echo $item->id; ?>" href="#"></a>
-                                    <span class="scomments-control-ip"><?php echo $item->ip; ?> / <?php echo '('.long2ip($item->ip).')'; ?></span>
+                                    <span class="scomments-control-ip"><?php echo $item->ip; ?> / <?php echo '(' . long2ip($item->ip) . ')'; ?></span>
                                 </div>
                             <?php endif; ?>
 
@@ -222,7 +224,8 @@ $this->items = $comments['comments'];
 <div class="scomments-anchor"></div>
 <div class="scomments-form" id="#ADD">
     <?php if (!empty($comments['blacklist'])): ?>
-        <h3>Администратор заблокировал возможность написания отзывов с этого IP - <?php echo $_SERVER['REMOTE_ADDR']; ?></h3>
+        <h3>Администратор заблокировал возможность написания отзывов с этого IP
+            - <?php echo $_SERVER['REMOTE_ADDR']; ?></h3>
         <p>Если вы считаете, что это произошло по ошибке - напишите на info@rus-trip.ru и укажите свой ip</p>
     <?php else: ?>
         <?php if (!empty($this->reviews)): ?>
@@ -274,17 +277,24 @@ $this->items = $comments['comments'];
                     <ul class="mob-spike">
                         <li>Отзывы с оскорблениями будут удалены!</li>
                         <?php if (!empty($user)): ?>
-                            <li>С момента написания отзыва, у вас будет 15 минут, в течение которых вы сможете его отредактировать.</li>
+                            <li>С момента написания отзыва, у вас будет 15 минут, в течение которых вы сможете его
+                                отредактировать.
+                            </li>
                         <?php endif; ?>
                     </ul>
                     <!--/noindex-->
                     <div class="form-wrapper">
-                    <?php if (!empty($this->item)): ?>
-                        <textarea id="description" name="description" style="width: 99%; height: 150px;"><blockquote><a href="#scomment-<?php echo $this->item->id; ?>">#<?php echo $this->num; ?></a> <?php echo mb_substr($this->item->description, 0, 100, 'UTF-8'); ?></blockquote>&nbsp;</textarea>
-                    <?php else: ?>
-                        <textarea id="description" name="description" style="width: 99%; height: 150px;"></textarea>
-                    <?php endif; ?>
-                    <div class="quiz-wrapper"></div>
+                        <div class="flex-container">
+                            <div class="descriptionR">
+                                <?php if (!empty($this->item)): ?>
+                                    <textarea id="description" name="description" style="width: 99%; height: 283px;"><blockquote><a href="#scomment-<?php echo $this->item->id; ?>">#<?php echo $this->num; ?></a> <?php echo mb_substr($this->item->description, 0, 100, 'UTF-8'); ?></blockquote>&nbsp;</textarea>
+                                <?php else: ?>
+                                    <textarea id="description" name="description"
+                                              style="width: 99%; height: 283px;"></textarea>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                            <div class="quiz-wrapper"></div>
                     </div>
                     <?php if (!empty($user)): ?>
                         <div style="margin: 10px 0;">

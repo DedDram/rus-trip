@@ -37,7 +37,7 @@ class ContentController extends AbstractUsersAuthController
 
     public function cookiePolicy()
     {
-        $this->view->renderHtml('content/cookiePolicy.php', ['title' => 'rus-trip.ru Network Cookie Policy']);
+        $this->view->renderHtml('content/kak-proehat.php', ['title' => 'rus-trip.ru Network Cookie Policy']);
     }
     public function privacyPolicy()
     {
@@ -45,7 +45,55 @@ class ContentController extends AbstractUsersAuthController
     }
     public function contact()
     {
-        $this->view->renderHtml('content/contact.php', ['title' => 'Contact us']);
+        $robots = '<meta name="robots" content="noindex, nofollow" />' . PHP_EOL;
+        $this->view->setVar('robots', $robots);
+        $this->view->renderHtml('content/contact.php', ['title' => 'Обратная связь']);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function kakProehat()
+    {
+        //комменты
+        $limit = 60;
+        if (empty($_GET['start'])) {
+            $page = 1;
+            $offset = $start = 0;
+        } else {
+            if (is_numeric($_GET['start'])) {
+                $page = $start = (int)$_GET['start'];
+                $offset = ($_GET['start'] - 1) * $limit;
+            } else {
+                throw new NotFoundException();
+            }
+        }
+        $comments = Comments::getComments('pages', 4, $limit, $offset, $start, $this->user);
+        $pagesCount = $comments['total'];
+        $pagination = new Pagination($page, $limit, $pagesCount);
+
+        $style = '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
+        $script = '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/guess_the_city.js"></script>' . PHP_EOL;
+        if (!empty($this->user)) {
+            $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
+        }
+        $this->view->setVar('style', $style);
+        $this->view->setVar('script', $script);
+
+        $this->view->renderHtml('content/kak-proehat.php',
+            [
+                'title' => 'Как проехать ОТ и ДО маршрут на машине',
+                'metaKey' => 'Как, проехать, ОТ, ДО, маршрут, на, машине',
+                'metaDesc' => 'Как проехать ОТ и ДО маршрут на машине, построение маршрутов пеших и автомобильных маршрутов как внутри города, так и между городами!',
+                'pagination' => $pagination,
+                'pagesCount' => $pagesCount,
+                'object_id' => 4,
+                'comments' => $comments,
+                'object_group' => 'pages',
+            ]);
     }
 
     /**
@@ -76,6 +124,7 @@ class ContentController extends AbstractUsersAuthController
         $script = '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/guess_the_city.js"></script>' . PHP_EOL;
         if (!empty($this->user)) {
             $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
         }
@@ -257,6 +306,7 @@ class ContentController extends AbstractUsersAuthController
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
         $script = '<script src="/../templates/main/js/map.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/content/js/hotels.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->renderHtml('content/hotels.php',
@@ -310,6 +360,7 @@ class ContentController extends AbstractUsersAuthController
         $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/guess_the_city.js"></script>' . PHP_EOL;
         if(!empty($photos)){
             $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
             $style .= '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;
@@ -344,6 +395,18 @@ class ContentController extends AbstractUsersAuthController
             ]);
     }
 
+    public function RedirectRestaurants($city_alias)
+    {
+        header("Location: /$city_alias/restaurants", true, 301);
+    }
+    public function RedirectHotels($city_alias)
+    {
+        header("Location: /$city_alias/hotels", true, 301);
+    }
+    public function RedirectMemorials($city_alias)
+    {
+        header("Location: /$city_alias/memorials", true, 301);
+    }
     /**
      * @throws NotFoundException
      */
@@ -379,6 +442,7 @@ class ContentController extends AbstractUsersAuthController
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
         $script = '<script src="/../templates/main/js/map.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/content/js/restaurants.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $this->view->setVar('script', $script);
         $this->view->setVar('scriptNoCompress', $scriptNoCompress);
         $this->view->renderHtml('content/restaurants.php',
