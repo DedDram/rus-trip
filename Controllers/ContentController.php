@@ -125,6 +125,10 @@ class ContentController extends AbstractUsersAuthController
         $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/content/js/guess_the_city.js"></script>' . PHP_EOL;
+        if($city_alias =='moskva'){
+            $style .= '<link rel="stylesheet" href="/../templates/content/css/redirect.css">' . PHP_EOL;
+            $script .= '<script src="/../templates/content/js/redirect.js"></script>' . PHP_EOL;
+        }
         if (!empty($this->user)) {
             $script .= '<script src="/../templates/comments/js/moderation.js"></script>' . PHP_EOL;
         }
@@ -244,6 +248,7 @@ class ContentController extends AbstractUsersAuthController
             'geo_lat' => $memorial->geo_lat,
             'geo_long' => $memorial->geo_long,
             'text' => $memorial->name,
+            'url' => '/'.$city_alias .'/memorial-'. $memorial->alias.'-'. $memorial->id,
             'icon' => 'islands#lightBlueStretchyIcon'
         );
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
@@ -352,6 +357,7 @@ class ContentController extends AbstractUsersAuthController
             'geo_lat' => $hotel->geo_lat,
             'geo_long' => $hotel->geo_long,
             'text' => $hotel->name,
+            'url' => '/'.$city_alias .'/hotel-'. $hotel->alias.'-'. $hotel->id,
             'icon' => 'islands#lightBlueStretchyIcon'
         );
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
@@ -488,6 +494,7 @@ class ContentController extends AbstractUsersAuthController
             'geo_lat' => $restaurant->geo_lat,
             'geo_long' => $restaurant->geo_long,
             'text' => $restaurant->name,
+            'url' => '/'.$city_alias .'/restaurant-'. $restaurant->alias.'-'. $restaurant->id,
             'icon' => 'islands#lightBlueStretchyIcon'
         );
         $scriptNoCompress = '<script src="https://api-maps.yandex.ru/2.1/?apikey=0fdafffc-ec9c-499a-87f9-8f19d053bb3e&lang=ru_RU"></script>' . PHP_EOL;
@@ -627,5 +634,24 @@ class ContentController extends AbstractUsersAuthController
         $this->view->renderHtml('json/json.php', [
             'data' => $citiesRandom,
         ]);
+    }
+
+    /**
+     * @throws ForbiddenException
+     */
+    public function redirect($url)
+    {
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            if (preg_match('~https://rus-trip\.ru~m', $_SERVER['HTTP_REFERER'])) {
+                header('Cache-Control: no-cache, no-store, must-revalidate');
+                header('Pragma: no-cache');
+                header('Expires: 0');
+                header('Location: /moskva?redirect=' . addslashes($url));
+            } else {
+                throw new ForbiddenException();
+            }
+        } else {
+            throw new ForbiddenException();
+        }
     }
 }

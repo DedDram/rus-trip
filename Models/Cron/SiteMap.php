@@ -12,101 +12,111 @@ class SiteMap
     {
         $this->db = Db::getInstance();
 
-        $this->getSchools();
-        $this->getDistrictsMetro();
-
+        $this->getCity();
+        $this->getMemorials();
+        $this->getHotels();
+        $this->getRestaurants();
         $this->save();
     }
 
-    public function getSchools(): void
+    public function getCity(): void
     {
-        $items = $this->db->query("SELECT t1.modified, CONCAT_WS('-', t1.id, t1.alias) AS item_alias, CONCAT_WS('-', t2.id, t2.alias) AS category_alias, CONCAT_WS('-', t3.id, t3.alias) AS section_alias FROM `cl6s3_schools_items` AS t1 INNER JOIN `cl6s3_schools_categories` AS t2 ON t1.category_id = t2.id INNER JOIN `cl6s3_schools_sections` AS t3 ON t1.section_id = t3.id ORDER BY t1.id ASC");
+        $items = $this->db->query("SELECT alias FROM `cities`");
 
         $data = array_chunk($items, 42000);
 
         foreach($data as $n => $rows)
         {
-            $max = 0;
             $result = array();
             foreach($rows as $item)
             {
-                //
-                $timestamp = strtotime($item->modified);
-                if($timestamp > 0)
-                {
-                    $lastmod = date('c', $timestamp);
-                }else{
-                    $lastmod = date('c', 1377029410);
-                }
-                if($lastmod > $max)
-                {
-                    $max = $lastmod;
-                }
-                //
+                $timestamp = time();
+                $lastmod = date('c', $timestamp);
+
                 $result[] = (object) array(
-                    'loc' => 'https://schoolotzyv.ru/schools/'.$item->section_alias.'/'.$item->category_alias.'/'.$item->item_alias,
+                    'loc' => 'https://rus-trip.ru/'.$item->alias,
+                    'lastmod' => $lastmod
+                );
+                $result[] = (object) array(
+                    'loc' => 'https://rus-trip.ru/'.$item->alias.'/karta',
+                    'lastmod' => $lastmod
+                );
+                $result[] = (object) array(
+                    'loc' => 'https://rus-trip.ru/'.$item->alias.'/memorials',
+                    'lastmod' => $lastmod
+                );
+                $result[] = (object) array(
+                    'loc' => 'https://rus-trip.ru/'.$item->alias.'/hotels',
+                    'lastmod' => $lastmod
+                );
+                $result[] = (object) array(
+                    'loc' => 'https://rus-trip.ru/'.$item->alias.'/restaurants',
+                    'lastmod' => $lastmod
+                );
+                $result[] = (object) array(
+                    'loc' => 'https://rus-trip.ru/'.$item->alias.'/znakomstva',
+                    'lastmod' => $lastmod
+                );
+                $result[] = (object) array(
+                    'loc' => 'https://rus-trip.ru/'.$item->alias.'/foto',
                     'lastmod' => $lastmod
                 );
             }
-            $this->setXml($result, 'sitemap_schools_'.$n.'.xml', $max);
+            $this->setXml($result, 'sitemap_city_'.$n.'.xml', $lastmod);
         }
     }
 
-    public function getDistrictsMetro(): void
+    public function getMemorials(): void
     {
-        $results = $this->db->query("SELECT t1.parent, t1.alias, CONCAT(t2.id, '-', t2.alias) as city ".
-            "FROM `cl6s3_schools_districts` as t1 INNER JOIN `cl6s3_schools_big` as t2 ON t1.parent =  t2.rayon");
-
-        $results_ = $this->db->query("SELECT t1.alias, CONCAT(t2.id, '-', t2.alias) as region, CONCAT(t3.id, '-', t3.alias) as section ".
-            "FROM `cl6s3_schools_districts` as t1 LEFT JOIN `cl6s3_schools_categories` as t2 ON t1.parent =  t2.name AND t2.section_id = t1.section_id ".
-            "LEFT JOIN `cl6s3_schools_sections` as t3 ON t3.id = t1.section_id WHERE t3.id IN (13,14,15,31)");
-
-        $areas = $this->db->query("SELECT t1.alias, CONCAT(t2.id, '-', t2.alias) as region ".
-            "FROM `cl6s3_schools_districts_r` as t1 LEFT JOIN `cl6s3_schools_categories` as t2 ON t1.parent =  t2.name");
-
-        $metros = $this->db->query("SELECT CONCAT_WS('-', id, alias) as alias FROM `cl6s3_schools_metro`");
-
-        foreach($results as $result){
-            $d_items[$result->parent][] = $result->city.'/'.$result->alias;
-        }
-
+        $memorials = $this->db->query("SELECT t2.alias as cityAlias,t1.alias,t1.id FROM `memorials` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id");
         $result = array();
-        foreach($d_items as $key=>$d_item){
-            if(count($d_item)>1){
-                if($key == 'Санкт-Петербург'){
-                    foreach($d_item as $item){
-                        $result[] = (object) array(
-                            'loc' => 'https://schoolotzyv.ru/schools/9-russia/173-sankt-peterburg'.$item
-                        );
-                    }
-                }else{
-                    foreach($d_item as $item){
-                        $result[] = (object) array(
-                            'loc' => 'https://schoolotzyv.ru/school/'.$item
-                        );
-                    }
-                }
-            }
-        }
-        foreach($results_ as $result_){
+        foreach($memorials as $item){
+            $timestamp = time();
+            $lastmod = date('c', $timestamp);
             $result[] = (object) array(
-                'loc' => 'https://schoolotzyv.ru/schools/'.$result_->section.'/'.$result_->region.'/'.$result_->alias
+                'loc' => 'https://rus-trip.ru/'.$item->cityAlias.'/memorial-'.$item->alias.'-'.$item->id,
+                'lastmod' => $lastmod
             );
-        }
-        foreach($areas as $area){
-            $result[] = (object) array(
-                'loc' => 'https://schoolotzyv.ru/schools/9-russia/'.$area->region.'/'.$area->alias
-            );
-        }
-        foreach($metros as $metro){
-            $result[] = (object) array(
-                'loc' => 'https://schoolotzyv.ru/metro/'.$metro->alias
-            );
-        }
 
-        $this->setXml($result, 'sitemap_schools_dm.xml', date('c'));
+        }
+        $this->setXml($result, 'sitemap_memorials.xml', date('c'));
     }
 
+    public function getHotels(): void
+    {
+        $hotels = $this->db->query("SELECT t2.alias as cityAlias,t1.alias,t1.id FROM `hotels` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id");
+        $result = array();
+        foreach($hotels as $item){
+            $timestamp = time();
+            $lastmod = date('c', $timestamp);
+            $result[] = (object) array(
+                'loc' => 'https://rus-trip.ru/'.$item->cityAlias.'/restaurant-'.$item->alias.'-'.$item->id,
+                'lastmod' => $lastmod
+            );
+
+        }
+        $this->setXml($result, 'sitemap_hotels.xml', date('c'));
+    }
+
+    public function getRestaurants(): void
+    {
+        $restaurants = $this->db->query("SELECT t2.alias as cityAlias,t1.alias,t1.id FROM `restaurants` as t1 INNER JOIN `cities` as t2 on t2.id= t1.city_id");
+        $result = array();
+        foreach($restaurants as $item){
+            $timestamp = time();
+            $lastmod = date('c', $timestamp);
+            $result[] = (object) array(
+                'loc' => 'https://rus-trip.ru/'.$item->cityAlias.'/restaurant-'.$item->alias.'-'.$item->id,
+                'lastmod' => $lastmod
+            );
+
+        }
+        $this->setXml($result, 'sitemap_restaurants.xml', date('c'));
+    }
+
+    /**
+     * @throws \DOMException
+     */
     private function setXml($items, $filename, $lastmod): void
     {
         $this->files[] = (object) array('name' => $filename, 'lastmod' => $lastmod);
@@ -134,6 +144,9 @@ class SiteMap
         $xml->save(__DIR__.'/../../xml/'.$filename);
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function save(): void
     {
         $xml = new DomDocument('1.0','utf-8');
@@ -149,7 +162,7 @@ class SiteMap
             $rowsElement = $xml->createElement('sitemap');
             $row = $rss->appendChild($rowsElement);
             //
-            $aElement = $xml->createElement('loc', 'https://schoolotzyv.ru/xml/'.$file->name);
+            $aElement = $xml->createElement('loc', 'https://rus-trip.ru/xml/'.$file->name);
             $a = $row->appendChild($aElement);
             //
             $bElement = $xml->createElement('lastmod', $file->lastmod);

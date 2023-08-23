@@ -328,9 +328,7 @@ class Dating
 
         // load countries and validate country id
         $Dating->country->items = $this->country;
-        if (!$Dating->country->id || !array_key_exists($Dating->country->id, $Dating->country->items)) {
-            $Dating->country->id = 3159; // Россия
-        }
+        $Dating->country->id = 3159;
 
         // load region and city data
         $Dating->region = self::load_dating_object($city->federal_subject, $Dating->region, $Dating->country->id, 'regions', 'reg');
@@ -446,13 +444,11 @@ class Dating
     private function load_dating_object($itemtitle, $item, $parentid, $type, $key)
     {
         if ($parentid) {
-            if (!$item->items) {
-                $jsdata = file_get_contents("http://love.rus-trip.ru/?a=geojson&fs={$key}_{$parentid}");
-                $item->items = (array)json_decode($jsdata, true);
-                // cache::save('dating', "{$type}_{$parentid}", $jsdata);
-            }
 
-            if (!array_key_exists($item->id, $item->items)) {
+        $jsdata = file_get_contents("http://love.rus-trip.ru/?a=geojson&fs={$key}_{$parentid}");
+        $item->items = (array)json_decode($jsdata, true);
+
+
                 $item->id = key($item->items);
 
                 if ($itemtitle) {
@@ -464,7 +460,7 @@ class Dating
                         }
                     }
                 }
-            }
+
         } else {
             $item->items = array();
         }

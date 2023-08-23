@@ -39,6 +39,9 @@ return [
     ['GET', '~^/comments\?task=unsubscribe&object_group=([a-z]+)&object_id=(\d+)$~', [\Controllers\UsersController::class, 'getResponse']],
     //Cron
     ['GET', '~^/cron/comments\?(.*)$~', [\Controllers\CronController::class, 'getResponse']],
+    ['GET', '~^/cron/sitemap$~', [\Controllers\CronController::class, 'siteMap']],
     //Угадывание городов
     ['GET', '~^/guess_the_city$~', [\Controllers\ContentController::class, 'guessCity']],
+    //Редирект при переходе по внешним ссылкам
+    ['GET', '~^/index.php\?redirect=(.*)$~', [\Controllers\ContentController::class, 'redirect']],
 ];

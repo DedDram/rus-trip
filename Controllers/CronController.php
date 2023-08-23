@@ -8,7 +8,7 @@ use Models\Content\Content;
 use Models\Cron\SiteMap;
 use Services\PHPMailer\Exception;
 
-class CronController extends AbstractUsersAuthController
+class CronController
 {
 
     private string $server_ip;
@@ -16,13 +16,12 @@ class CronController extends AbstractUsersAuthController
     public function __construct()
     {
         $this->server_ip = (require __DIR__ . '/../settings.php')['main']['server_ip'];
-        parent::__construct();
     }
 
     /**
      * @throws Exception
      */
-    public function getResponse()
+    public function getResponse(): void
     {
         //чтобы не кешировался редирект ниже
         header('Cache-Control: no-cache, no-store, must-revalidate');
@@ -85,15 +84,11 @@ class CronController extends AbstractUsersAuthController
     /**
      * @throws ForbiddenException
      */
-    public function siteMap()
+    public function siteMap(): void
     {
         if ($this->server_ip != $_SERVER['REMOTE_ADDR']) {
             throw new ForbiddenException();
         }
-        $data = [];
         new SiteMap;
-        $this->view->renderHtml('json/json.php', [
-            'data' => $data,
-        ]);
     }
 }

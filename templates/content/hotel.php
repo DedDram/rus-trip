@@ -25,13 +25,13 @@ $word = \Services\stString::declension($hotel->comments, array('отзыв', 'о
                     <div class="rating_value" style="width:<?php echo $width; ?>%"></div>
                 </div>
                 <meta itemprop="itemReviewed" content="<?php echo $hotel->name; ?>">
-                (<b itemprop="ratingCount"><?php echo $word; ?></b>)
+                (<b><?php echo $word; ?></b>)
+                <meta itemprop="ratingCount" content="<?php echo $hotel->comments; ?>">
                 <meta itemprop="ratingValue" content="<?php echo $value; ?>">
                 <meta itemprop="bestRating" content="5">
-                <meta itemprop="worstRating" content="0">
+                <meta itemprop="worstRating" content="1">
             </div>
         </div>
-        <h1 itemprop="name"><?php echo $hotel->name; ?></h1>
         <script type="text/javascript">
             let items = <?php echo json_encode($addresses); ?>;
             ymaps.ready(function () {
@@ -49,6 +49,7 @@ $word = \Services\stString::declension($hotel->comments, array('отзыв', 'о
                rel="nofollow">Нашли ошибку?</a><br>
         </div>
         <div itemscope itemtype="https://schema.org/Hotel">
+            <h1 itemprop="name"><?php echo $hotel->name; ?></h1>
             <p>
                 <?php echo $hotel->about; ?>
             </p>

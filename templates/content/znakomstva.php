@@ -3,7 +3,7 @@
         <div class="breadcrumbs">
             <span itemscope="" itemtype="https://schema.org/WebPage">
                 <span itemprop="breadcrumb">
-                    <a href="/<?php echo $city_alias; ?>" itemprop="url"><span><?php echo $city->name; ?></span></a>
+                    <a href="/<?php echo $city->alias; ?>" itemprop="url"><span><?php echo $city->name; ?></span></a>
                 </span>
                 <span> »
                     <span itemscope="" itemtype="https://schema.org/WebPage">

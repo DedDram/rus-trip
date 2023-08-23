@@ -74,7 +74,7 @@
                      <span class="sylka-adres">Сайт: <span itemprop="url">
                                                 <?php
                                                 if (!empty($memorial->website)) {
-                                                    echo "<a href='" . $memorial->website . "'>" . $memorial->website . "</a>";
+                                                    echo "<a href='/index.php?redirect=" . $memorial->website . "'>" . $memorial->website . "</a>";
                                                 } else {
                                                     echo "нет данных";
                                                 }

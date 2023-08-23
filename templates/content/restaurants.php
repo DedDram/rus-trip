@@ -79,8 +79,15 @@
                     <span>Телефон: <span
                                 itemprop="telephone"><?php echo $restaurant->phone ?? 'неизвестно'; ?></span></span><br>
                     <span class="sylka-adres">E-mail: <?php echo $restaurant->email ?? 'неизвестно'; ?></span><br>
-                    <span class="sylka-adres">Сайт: <span
-                                itemprop="url"><?php echo $restaurant->website ?? 'неизвестно'; ?></span></span>
+                    <span class="sylka-adres">Сайт: <span itemprop="url">
+                        <?php
+                        if (!empty($restaurant->website)) {
+                            echo "<a href='/index.php?redirect=" . $restaurant->website . "'>" . $restaurant->website . "</a>";
+                        } else {
+                            echo "нет данных";
+                        }
+                        ?>
+                        </span></span>
                 </div>
                 </div>
             <?php endforeach; ?>
