@@ -281,7 +281,7 @@ class User extends ActiveRecordEntity
                 throw new InvalidArgumentException('Пароль должен быть не менее 8 символов');
             }
             $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $str .= " `password_hash` = $passwordHash";
+            $str .= " `password_hash` = '$passwordHash'";
         }
         $str = preg_replace('~,$~m', '', $str);
         $db->query("UPDATE `cl6s3_users` ".$str." WHERE `cl6s3_users`.`id` = '".$userId."';");

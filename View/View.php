@@ -61,9 +61,8 @@ class View
 
     private function minify($buffer): string
     {
-        //file_put_contents(__DIR__ . '/../templates/cache/'.microtime(true).'.txt', $buffer);
         //css
-        preg_match_all('~<link rel="stylesheet" href="(.*)">~mU', $buffer, $matchesCss);
+/*        preg_match_all('~<link rel="stylesheet" href="(.*)">~mU', $buffer, $matchesCss);
         $styles = '';
         $hashCss = md5(serialize($matchesCss[1]));
         $filenameCss = __DIR__ . '/../templates/cache/' . $hashCss . '.css';
@@ -75,11 +74,8 @@ class View
                 $styles .= $css . PHP_EOL;
             }
             file_put_contents(__DIR__ . '/../templates/cache/' . $hashCss . '.css', $styles);
-            //$gzDataCss = gzencode($styles, 9);
-            //file_put_contents(__DIR__ . '/../templates/cache/'.$hashCss.'.css.gz', $gzDataCss);
         }
-        $buffer = preg_replace('~<!--css-->(.*?)<!--cssEnd-->~s', '<link rel="stylesheet" href="/templates/cache/' . $hashCss . '.css">' . PHP_EOL, $buffer);
-        //$buffer = str_replace('<!--css-->', '<link rel="stylesheet" href="/templates/cache/'.$hashCss.'.css">'. PHP_EOL, $buffer);
+        $buffer = preg_replace('~<!--css-->(.*?)<!--cssEnd-->~s', '<link rel="stylesheet" href="/templates/cache/' . $hashCss . '.css">' . PHP_EOL, $buffer);*/
 
         //js
         preg_match_all('~<script src="(.*)></script>~mU', $buffer, $matchesJs);
@@ -99,8 +95,6 @@ class View
                 file_put_contents(__DIR__ . '/../templates/cache/' . $hashJs . '.js', $scripts);
             }
             $buffer = preg_replace('~<!--js-->(.*?)<!--jsEnd-->~s', '<script defer src="/templates/cache/' . $hashJs . '.js"></script>' . PHP_EOL, $buffer);
-            //$buffer = str_replace('<!--js-->', '<script src="/templates/cache/'.$hashJs.'.js"></script>'. PHP_EOL, $buffer);
-
         }
         return $buffer;
     }

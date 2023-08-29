@@ -8,7 +8,7 @@ use Models\Content\Content;
 use Models\Cron\SiteMap;
 use Services\PHPMailer\Exception;
 
-class CronController
+class CronController extends AbstractUsersAuthController
 {
 
     private string $server_ip;
@@ -16,6 +16,7 @@ class CronController
     public function __construct()
     {
         $this->server_ip = (require __DIR__ . '/../settings.php')['main']['server_ip'];
+        parent::__construct();
     }
 
     /**

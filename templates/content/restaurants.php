@@ -81,7 +81,9 @@
                     <span class="sylka-adres">E-mail: <?php echo $restaurant->email ?? 'неизвестно'; ?></span><br>
                     <span class="sylka-adres">Сайт: <span itemprop="url">
                         <?php
-                        if (!empty($restaurant->website)) {
+                        if (!empty($restaurant->website) && $restaurant->website != 'нет данных') {
+                            $restaurant->website = str_replace(array('http://', 'https://'), '', $restaurant->website);
+                            $restaurant->website = preg_replace('~/$~', '', $restaurant->website);
                             echo "<a href='/index.php?redirect=" . $restaurant->website . "'>" . $restaurant->website . "</a>";
                         } else {
                             echo "нет данных";

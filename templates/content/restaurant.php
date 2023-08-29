@@ -12,7 +12,7 @@ $word = \Services\stString::declension($restaurant->comments, array('отзыв'
                 <span> »
                     <span itemscope="" itemtype="https://schema.org/WebPage">
                         <span itemprop="breadcrumb">
-                            <a href="/<?php echo $restaurant->cityAlias; ?>/memorials" itemprop="url"><span>Кафе, рестораны</span></a>
+                            <a href="/<?php echo $restaurant->cityAlias; ?>/restaurants" itemprop="url"><span>Кафе, рестораны</span></a>
                         </span>
                     </span>
                 </span>
@@ -59,8 +59,10 @@ $word = \Services\stString::declension($restaurant->comments, array('отзыв'
                 <span class="sylka-adres">E-mail: <?php echo $restaurant->email ?? 'неизвестно'; ?></span><br>
                 <span class="sylka-adres">Сайт: <span itemprop="url">
                     <?php
-                    if (!empty($restaurant->website)) {
-                        echo "<a href='" . $restaurant->website . "'>" . $restaurant->website . "</a>";
+                    if (!empty($restaurant->website) && $restaurant->website != 'нет данных') {
+                        $restaurant->website = str_replace(array('http://', 'https://'), '', $restaurant->website);
+                        $restaurant->website = preg_replace('~/$~', '', $restaurant->website);
+                        echo "<a href='/index.php?redirect=" . $restaurant->website . "'>" . $restaurant->website . "</a>";
                     } else {
                         echo "нет данных";
                     }

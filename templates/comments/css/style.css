@@ -45,7 +45,7 @@
     color: #3c452d;
     font: bold 1em Verdana, Arial, Sans-Serif;
 }
-/* Blockquote */
+
 blockquote {
     background: #f9f9f9;
     border-left: 10px solid #ccc;
@@ -334,7 +334,7 @@ blockquote:before {
     height: 150px;
     border: 1px solid #ccc;
 }
-/* */
+
 
 @media screen and (max-width: 480px) {
     .scomments-form .mob-spike {
@@ -356,9 +356,6 @@ blockquote:before {
     }
 }
 
-/* */
-
-/* Blockquote */
 
 .scomments-form blockquote {
     background: #f9f9f9;
@@ -377,8 +374,6 @@ blockquote:before {
     vertical-align: -0.4em;
 }
 
-/**/
-
 .scomments-form blockquote a {
     color: #777;
     text-decoration: none;
@@ -393,7 +388,6 @@ blockquote:before {
     outline: none;
 }
 
-/**/
 
 .scomments-form #guest_name {
     border: 1px solid #aaa;
@@ -402,7 +396,6 @@ blockquote:before {
     width: 172px;
 }
 
-/* */
 
 .scomments-form .colClear {
     clear: both;
@@ -461,8 +454,6 @@ blockquote:before {
     color: #1E90FF;
 }
 
-/* */
-
 .scomments-form #slider {
     margin: 15px 20px 0 20px;
 }
@@ -484,8 +475,6 @@ blockquote:before {
     height: 92px;
 }
 
-/* */
-
 .scomments-form #msg {
     padding: 7px 7px 6px 7px;
     margin-bottom: 14px;
@@ -505,7 +494,6 @@ blockquote:before {
     color: #363636;
 }
 
-/* */
 
 .scomments-form #percent {
     display: none;

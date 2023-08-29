@@ -19,7 +19,7 @@ class Comments
         $this->db = Db::getInstance();
 
         //обновление геолокации отзывов
-        $items = $this->db->query("SELECT * FROM `cl6s3_comments_items` WHERE country is null AND ip != 0 ORDER BY id DESC LIMIT 10");
+        $items = $this->db->query("SELECT * FROM `cl6s3_comments_items` WHERE country is null AND ip != 0 ORDER BY id DESC LIMIT 1");
 
         if(!empty($items[0]))
         {

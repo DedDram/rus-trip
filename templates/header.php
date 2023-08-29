@@ -13,8 +13,8 @@
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="shortcut icon" href="/static/website/img/favicon.ico"/>
     <!--css-->
-    <?= $style ?? '' ?>
     <link rel="stylesheet" href="/static/website/css/theme.css">
+    <?= $style ?? '' ?>
     <!--cssEnd-->
     <?= $scriptNoCompress ?? '' ?>
     <!--js-->

@@ -73,7 +73,9 @@
                     <span class="sylka-adres">E-mail: <?php echo $memorial->email ?? 'неизвестно'; ?></span><br>
                      <span class="sylka-adres">Сайт: <span itemprop="url">
                                                 <?php
-                                                if (!empty($memorial->website)) {
+                                                if (!empty($memorial->website) && $memorial->website != 'нет данных') {
+                                                    $memorial->website = str_replace(array('http://', 'https://'), '', $memorial->website);
+                                                    $memorial->website = preg_replace('~/$~', '', $memorial->website);
                                                     echo "<a href='/index.php?redirect=" . $memorial->website . "'>" . $memorial->website . "</a>";
                                                 } else {
                                                     echo "нет данных";

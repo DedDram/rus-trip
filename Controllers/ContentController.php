@@ -119,6 +119,8 @@ class ContentController extends AbstractUsersAuthController
             }
         }
         $comments = Comments::getComments('city', $city->id, $limit, $offset, $start, $this->user);
+        $pagesCount = $comments['total'];
+        $pagination = new Pagination($page, $limit, $pagesCount);
 
         $style = '<link rel="stylesheet" href="/../templates/comments/css/style.css">' . PHP_EOL;
         $script = '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
@@ -143,6 +145,8 @@ class ContentController extends AbstractUsersAuthController
                 'object_id' => $city->id,
                 'comments' => $comments,
                 'object_group' => 'city',
+                'pagination' => $pagination,
+                'pagesCount' => $pagesCount,
             ]);
     }
 
@@ -503,6 +507,7 @@ class ContentController extends AbstractUsersAuthController
         $script .= '<script src="/../templates/content/js/jquery.form.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/main/js/jquery.simplemodal.js"></script>' . PHP_EOL;
         $script .= '<script src="/../templates/comments/js/comments.js"></script>' . PHP_EOL;
+        $script .= '<script src="/../templates/content/js/guess_the_city.js"></script>' . PHP_EOL;
         if(!empty($photos)){
             $script .= '<script src="/../templates/content/js/photos.js"></script>' . PHP_EOL;
             $style .= '<link rel="stylesheet" href="/../templates/content/css/magnific.css">' . PHP_EOL;

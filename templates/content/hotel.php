@@ -12,7 +12,7 @@ $word = \Services\stString::declension($hotel->comments, array('отзыв', 'о
                 <span> »
                     <span itemscope="" itemtype="https://schema.org/WebPage">
                         <span itemprop="breadcrumb">
-                            <a href="/<?php echo $hotel->cityAlias; ?>/memorials" itemprop="url"><span>Гостиницы, отели</span></a>
+                            <a href="/<?php echo $hotel->cityAlias; ?>/hotels" itemprop="url"><span>Гостиницы, отели</span></a>
                         </span>
                     </span>
                 </span>
@@ -59,13 +59,15 @@ $word = \Services\stString::declension($hotel->comments, array('отзыв', 'о
                 <span>Телефон: <span itemprop="telephone"><?php echo $hotel->phone ?? 'неизвестно'; ?></span></span><br>
                 <span class="sylka-adres">E-mail: <?php echo $hotel->email ?? 'неизвестно'; ?></span><br>
                 <span class="sylka-adres">Сайт: <span itemprop="url">
-                    <?php
-                    if (!empty($hotel->website)) {
-                        echo "<a href='" . $hotel->website . "'>" . $hotel->website . "</a>";
-                    } else {
-                        echo "нет данных";
-                    }
-                    ?>
+                     <?php
+                     if (!empty($hotel->website) && $hotel->website != 'нет данных') {
+                         $hotel->website = str_replace(array('http://', 'https://'), '', $hotel->website);
+                         $hotel->website = preg_replace('~/$~', '', $hotel->website);
+                         echo "<a href='/index.php?redirect=" . $hotel->website . "'>" . $hotel->website . "</a>";
+                     } else {
+                         echo "нет данных";
+                     }
+                     ?>
                     </span>
                             </span>
             </div>
