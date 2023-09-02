@@ -445,7 +445,7 @@ class Dating
     {
         if ($parentid) {
 
-        $jsdata = file_get_contents("http://love.rus-trip.ru/?a=geojson&fs={$key}_{$parentid}");
+        $jsdata = file_get_contents("https://love.rus-trip.ru/?a=geojson&fs={$key}_{$parentid}");
         $item->items = (array)json_decode($jsdata, true);
 
 

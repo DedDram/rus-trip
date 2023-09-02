@@ -25,7 +25,8 @@ $word = \Services\stString::declension($restaurant->comments, array('отзыв'
                     <div class="rating_value" style="width:<?php echo $width; ?>%"></div>
                 </div>
                 <meta itemprop="itemReviewed" content="<?php echo $restaurant->name; ?>">
-                (<b itemprop="ratingCount"><?php echo $word; ?></b>)
+                (<b><?php echo $word; ?></b>)
+                <meta itemprop="ratingCount" content="<?php echo $restaurant->comments; ?>">
                 <meta itemprop="ratingValue" content="<?php echo $value; ?>">
                 <meta itemprop="bestRating" content="5">
                 <meta itemprop="worstRating" content="0">

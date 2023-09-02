@@ -417,6 +417,14 @@ class ContentController extends AbstractUsersAuthController
     {
         header("Location: /$city_alias/memorials", true, 301);
     }
+    public function RedirectMain()
+    {
+        header("Location: /", true, 301);
+    }
+    public function RedirectProehat()
+    {
+        header("Location: /kak-proehat-ot-i-do", true, 301);
+    }
     /**
      * @throws NotFoundException
      */
@@ -583,9 +591,9 @@ class ContentController extends AbstractUsersAuthController
         $this->view->setVar('style', $style);
         $this->view->renderHtml('content/znakomstva.php',
             [
-                'title' => 'Знакомства в '.$city->name_morphy.' без регистрации бесплатно',
-                'metaKey' => 'Знакомства, в, '.$city->name_morphy.', без, регистрации, бесплатно',
-                'metaDesc' => 'Знакомства в '.$city->name_morphy.' без регистрации бесплатно',
+                'title' => 'Знакомства в '.$city->name_morphy.'. без регистрации бесплатно',
+                'metaKey' => 'Знакомства, в, '.$city->name_morphy.', без, регистрации, бесплатно, для, секса, любовницу, любовника, шлюху, ночь',
+                'metaDesc' => 'Знакомства в '.$city->name_morphy.' Поможем найти любовницу 💖 или любовника 🥰 на ночь без 💘 регистрации бесплатно 💑',
                 'Fields' => $Fields,
                 'object_id' => $city->id,
                 'comments' => $comments,

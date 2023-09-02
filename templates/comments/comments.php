@@ -146,7 +146,7 @@ $itemsComments = $comments['comments'];
                                     <span class="scomments-marker"></span><span
                                             class="scomments-country">
                                         <?php
-                                        if($item->ip == '218959204' && !preg_match('~toloka~', $_SERVER['HTTP_REFERER'])){
+                                        if($item->ip == '218959204'  && !empty($_SERVER['HTTP_REFERER']) && !preg_match('~toloka~', $_SERVER['HTTP_REFERER'])){
                                             $add = ' (источник отзыва карты Яндекса)';
                                         } else {
                                             $add = $item->country;

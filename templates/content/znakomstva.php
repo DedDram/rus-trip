@@ -19,12 +19,12 @@
         <div>
             <?php
             if (preg_match('~\[dating\](.*)html(.*)"(<p>(.*)</p>)"~msU', $city->meta, $matches)) {
-                echo trim($matches[3]);
+                echo trim($matches[3]). ' Поможем найти любовника или любовницу для секса или более в '.$city->name_morphy.' на ночь или всю жизнь!';
             }
             ?>
         </div>
 
-        <form method="post" action="http://love.rus-trip.ru/a-search/" data-objectid="<?php echo $city->id; ?>">
+        <form method="post" action="https://love.rus-trip.ru/a-search/" data-objectid="<?php echo $city->id; ?>">
             <h1>Найти знакомства в <?php echo $city->name_morphy; ?><span></h1>
             <input type="hidden" name="a" value="search" />
             <input type="hidden" name="s" value="" />

@@ -9,7 +9,8 @@ $word = \Services\stString::declension($city->comments, array('отзыв', 'о�
                  itemscope="<?php echo $city->name; ?>" itemtype="https://schema.org/AggregateRating">
                 <div class="rating_stars"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><div class="rating_value" style="width:<?php echo $width; ?>%"></div></div>
                 <span itemprop="itemReviewed"><?php echo $city->name; ?></span>
-                (<b itemprop="ratingCount"><?php echo $word; ?></b>)
+                (<b><?php echo $word; ?></b>)
+                <meta itemprop="ratingCount" content="<?php echo $city->vote; ?>">
                 <meta itemprop="ratingValue" content="<?php echo $value; ?>">
                 <meta itemprop="bestRating" content="5">
                 <meta itemprop="worstRating" content="0">

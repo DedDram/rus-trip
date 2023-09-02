@@ -54,5 +54,7 @@ return [
     ['GET', '~^/(.*)/(\d+)-foto-(.*)$~', [\Controllers\MainController::class, 'main']],
     ['GET', '~^/(.*)/taxi/(.*)$~', [\Controllers\MainController::class, 'main']],
     ['GET', '~^/content/view/(.*)$~', [\Controllers\MainController::class, 'main']],
-    ['GET', '~^/kak-proehat-ot-i-do\.html(.*)$~', [\Controllers\MainController::class, 'main']],
+    ['GET', '~^/kak-proehat-ot-i-do\.html(.*)$~', [\Controllers\ContentController::class, 'RedirectProehat']],
+    ['GET', '~^/(.*)/kak-dobratsya(.*)$~', [\Controllers\ContentController::class, 'RedirectProehat']],
+    ['GET', '~^/(.*)/taxi$~', [\Controllers\ContentController::class, 'RedirectMain']],
 ];
