@@ -55,8 +55,8 @@ class View
         $breadcrumb = "<div id=\"yandex_rtb_R-A-60558-4\" style=\"max-height: 250px;overflow: hidden;\"></div> <script>window.yaContextCb.push(()=>{ Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-60558-4', blockId: 'R-A-60558-4' }) })</script>".PHP_EOL;
         $moduleComments = "<div id=\"yandex_rtb_R-A-60558-6\"></div> <script>window.yaContextCb.push(()=>{ Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-60558-6', blockId: 'R-A-60558-6' }) })</script>".PHP_EOL;
         $reklamaOver10 = "<div id=\"yandex_rtb_R-A-60558-3\"></div> <script>window.yaContextCb.push(()=>{ Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-60558-3', blockId: 'R-A-60558-3' }) })</script>".PHP_EOL;
-        $floorAd = '<script>window.yaContextCb.push(()=>{ Ya.Context.AdvManager.render({ "blockId": "R-A-60558-7", "type": "floorAd" }) }) </script>';
-        return str_replace(array("<!-- banner2 -->", "<!-- breadcrumb -->", "<!-- module-maps -->", "<!-- reklama-over-10 -->", "<!-- user9 -->"), array($banner2, $breadcrumb, $moduleComments, $reklamaOver10, $floorAd), $buffer);
+        //$floorAd = '<script>window.yaContextCb.push(()=>{ Ya.Context.AdvManager.render({ "blockId": "R-A-60558-7", "type": "floorAd" }) }) </script>';
+        return str_replace(array("<!-- banner2 -->", "<!-- breadcrumb -->", "<!-- module-maps -->", "<!-- reklama-over-10 -->", "<!-- user9 -->"), array($banner2, $breadcrumb, $moduleComments, $reklamaOver10), $buffer);
     }
 
     private function minify($buffer): string

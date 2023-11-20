@@ -26,5 +26,14 @@
 <noscript>
     <div><img src="https://mc.yandex.ru/watch/11510731" style="position:absolute; left:-9999px;" alt=""/></div>
 </noscript>
+<script>
+    window.yaContextCb.push(()=>{
+        Ya.Context.AdvManager.render({
+            "blockId": "R-A-1590007-5",
+            "type": "floorAd",
+            "platform": "touch"
+        })
+    })
+</script>
 </body>
 </html>

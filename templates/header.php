@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/static/website/css/theme.css">
     <?= $style ?? '' ?>
     <!--cssEnd-->
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
     <?= $scriptNoCompress ?? '' ?>
     <!--js-->
     <script src="/templates/main/js/jquery-3.6.3.min.js"></script>
@@ -31,11 +33,12 @@
         <ul>
             <?php
             if (empty($user)) {
-                echo '<li><a href="/register" rel="nofollow">Регистрация</a></li>
+                echo '<li><a href="/users/register" rel="nofollow">Регистрация</a></li>
                       <li class=""><a href="/users/login" rel="nofollow">Вход</a></li>';
             }else{
                 echo '<li><a href="/users/logout">Выход ' . '</a><li><a href="/users/profile">Настройки</a></li>';
             }
+            echo '<li><a href="/politics">Политика</a></li>';
             ?>
         </ul>
     </div>

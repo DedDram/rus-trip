@@ -3,14 +3,11 @@
 namespace Controllers;
 
 use Exceptions\ForbiddenException;
-use Exceptions\InvalidArgumentException;
 use Exceptions\NotFoundException;
-use Exceptions\UnauthorizedException;
 use Models\Comments\Comments;
 use Models\Content\Content;
 use Models\Dating\Dating;
 use Models\Informer\Informer;
-use Services\ExternalLinks;
 use Services\Pagination;
 
 class ContentController extends AbstractUsersAuthController
@@ -591,9 +588,9 @@ class ContentController extends AbstractUsersAuthController
         $this->view->setVar('style', $style);
         $this->view->renderHtml('content/znakomstva.php',
             [
-                'title' => 'Знакомства в '.$city->name_morphy.'. без регистрации бесплатно',
+                'title' => 'Знакомства в '.$city->name_morphy.' без регистрации бесплатно',
                 'metaKey' => 'Знакомства, в, '.$city->name_morphy.', без, регистрации, бесплатно, для, секса, любовницу, любовника, шлюху, ночь',
-                'metaDesc' => 'Знакомства в '.$city->name_morphy.' Поможем найти любовницу 💖 или любовника 🥰 на ночь без 💘 регистрации бесплатно 💑',
+                'metaDesc' => 'Знакомства в '.$city->name_morphy.' Поможем найти любовницу 💖 или любовника для секса 🥰 на ночь без 💘 регистрации бесплатно 💑',
                 'Fields' => $Fields,
                 'object_id' => $city->id,
                 'comments' => $comments,
@@ -637,6 +634,13 @@ class ContentController extends AbstractUsersAuthController
                 'city_alias' => $city_alias,
                 'cityGenitive' =>  $cityGenitive
             ]);
+    }
+
+    public function politics()
+    {
+        $robots = '<meta name="robots" content="noindex, nofollow" />' . PHP_EOL;
+        $this->view->setVar('robots', $robots);
+        $this->view->renderHtml('content/politics.php', ['title' => 'Политика обработки персональных данных пользователей']);
     }
 
     public function guessCity()

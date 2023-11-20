@@ -24,7 +24,9 @@ $token = $_SESSION['token'];
             <label><input size="30" minlength="8" maxlength="25" type="password" name="password" value="<?= $_POST['password'] ?? '' ?>"> Пароль </label>
             <br><br>
             <input type="hidden" name="token" value="<?php echo $token; ?>">
+            Нажимая кнопку "Зарегистрироваться" вы принимаете <a href="/politics">условия обработки персональных данных</a>.
             <input type="submit" value="Зарегистрироваться">
+
         </form>
     </div>
 </article>
