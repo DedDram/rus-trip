@@ -129,14 +129,14 @@ class Comments
 
     private static function YandexLocation($ip): object
     {
-        $yandex_api_key = 'ABvrmkwBAAAAMG8HdwIAOuIhmdroVhAsutIPfPXaWNwDDqMAAAAAAAAAAACYaQU04MKqqq7kiXYPr1nN2z0P8w==';
-
-        $data = (object) array(
-            'common' => (object) array(
+        $yandex_api_key = '0fdafffc-ec9c-499a-87f9-8f19d053bb3e';
+        $yandex_api_keyLocator = '0a640a26-368a-47fe-a495-247a04edf067';
+        $data = (object)array(
+            'common' => (object)array(
                 'version' => '1.0',
-                'api_key' => $yandex_api_key
+                'api_key' => $yandex_api_keyLocator
             ),
-            'ip' => (object) array(
+            'ip' => (object)array(
                 'address_v4' => $ip
             )
         );
@@ -146,24 +146,38 @@ class Comments
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_ENCODING, 'identity');
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, 'json='.json_encode($data));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, 'json=' . json_encode($data));
         $response = curl_exec($ch);
         curl_close($ch);
 
         $geo = json_decode($response, true);
-        if(!empty($geo['position'])){
-            $content = file_get_contents('https://geocode-maps.yandex.ru/1.x/?apikey=4fc9a882-21a7-4713-9b80-6d7e4c355526&format=json&geocode='.$geo['position']['longitude'].','.$geo['position']['latitude']);
+
+        try {
+            if (!empty($geo['position'])) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://geocode-maps.yandex.ru/1.x/?apikey=' . $yandex_api_key . '&format=json&geocode=' . $geo['position']['longitude'] . ',' . $geo['position']['latitude']);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_REFERER, 'https://rus-trip.ru');
+                $content = curl_exec($ch);
+                curl_close($ch);
+            } else {
+                return (object)array();
+            }
+        } catch (Exception $e) {
+            return (object)array();
+        }
+
+        if (!empty($content)) {
             $data = json_decode($content, true);
 
-            if(!empty($data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AdministrativeArea']['SubAdministrativeArea']['Locality']['LocalityName']))
-            {
+            if (!empty($data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AdministrativeArea']['SubAdministrativeArea']['Locality']['LocalityName'])) {
                 $city = $data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AdministrativeArea']['SubAdministrativeArea']['Locality']['LocalityName'];
-            }else{
+            } else {
                 $city = $data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
             }
-            return (object) array('country' => $data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['CountryName'] ?? '', 'city' => $city ?? '');
-        }else{
-            return (object) array();
+            return (object)array('country' => $data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['CountryName'], 'city' => $city);
+        } else {
+            return (object)array();
         }
     }
 

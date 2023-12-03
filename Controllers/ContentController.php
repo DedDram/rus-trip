@@ -7,7 +7,6 @@ use Exceptions\NotFoundException;
 use Models\Comments\Comments;
 use Models\Content\Content;
 use Models\Dating\Dating;
-use Models\Informer\Informer;
 use Services\Pagination;
 
 class ContentController extends AbstractUsersAuthController
@@ -15,9 +14,8 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function getResponse()
+    public function getResponse(): void
     {
-        $data = '';
         if (!empty($_POST['cityId']) && !empty($_POST['offset']) && !empty($_POST['limit']) && !empty($_POST['object']) && $_POST['object'] =='hotels') {
             $cities = new Content();
             echo $cities->getHotelsMore((int) $_POST['cityId'], (int) $_POST['offset'], 20);
@@ -26,21 +24,18 @@ class ContentController extends AbstractUsersAuthController
             $cities = new Content();
             echo $cities->getRestaurantsMore((int) $_POST['cityId'], (int) $_POST['offset'], 20);
         }
-/*        $this->view->renderHtml('json/json.php', [
-            'data' => $data,
-        ]);*/
     }
 
 
-    public function cookiePolicy()
+    public function cookiePolicy(): void
     {
         $this->view->renderHtml('content/kak-proehat.php', ['title' => 'rus-trip.ru Network Cookie Policy']);
     }
-    public function privacyPolicy()
+    public function privacyPolicy(): void
     {
         $this->view->renderHtml('content/privacyPolicy.php', ['title' => 'Privacy Policy']);
     }
-    public function contact()
+    public function contact(): void
     {
         $robots = '<meta name="robots" content="noindex, nofollow" />' . PHP_EOL;
         $this->view->setVar('robots', $robots);
@@ -50,7 +45,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function kakProehat()
+    public function kakProehat(): void
     {
         //комменты
         $limit = 60;
@@ -96,7 +91,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function city($city_alias)
+    public function city($city_alias): void
     {
         $cities = new Content();
         $city = $cities->getCity((string) $city_alias);
@@ -150,7 +145,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function map($city_alias)
+    public function map($city_alias): void
     {
         $cities = new Content();
         $city = $cities->getCity((string) $city_alias);
@@ -173,7 +168,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function memorials($city_alias)
+    public function memorials($city_alias): void
     {
         $cities = new Content();
         $city = $cities->getCity((string) $city_alias);
@@ -223,7 +218,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function memorial($city_alias, $memorial_alias, $memorial_id)
+    public function memorial($city_alias, $memorial_alias, $memorial_id): void
     {
         $cities = new Content();
         $memorial = $cities->getMemorial((string)$city_alias, (string)$memorial_alias, (int) $memorial_id);
@@ -292,7 +287,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function hotels($city_alias)
+    public function hotels($city_alias): void
     {
         $cities = new Content();
         $city = $cities->getCity((string) $city_alias);
@@ -332,7 +327,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function hotel($city_alias, $hotel_alias, $hotel_id)
+    public function hotel($city_alias, $hotel_alias, $hotel_id): void
     {
         $cities = new Content();
         $hotel = $cities->getHotel((string)$city_alias, (string)$hotel_alias, (int) $hotel_id);
@@ -402,30 +397,30 @@ class ContentController extends AbstractUsersAuthController
             ]);
     }
 
-    public function RedirectRestaurants($city_alias)
+    public function RedirectRestaurants($city_alias): void
     {
         header("Location: /$city_alias/restaurants", true, 301);
     }
-    public function RedirectHotels($city_alias)
+    public function RedirectHotels($city_alias): void
     {
         header("Location: /$city_alias/hotels", true, 301);
     }
-    public function RedirectMemorials($city_alias)
+    public function RedirectMemorials($city_alias): void
     {
         header("Location: /$city_alias/memorials", true, 301);
     }
-    public function RedirectMain()
+    public function RedirectMain(): void
     {
         header("Location: /", true, 301);
     }
-    public function RedirectProehat()
+    public function RedirectProehat(): void
     {
         header("Location: /kak-proehat-ot-i-do", true, 301);
     }
     /**
      * @throws NotFoundException
      */
-    public function restaurants($city_alias)
+    public function restaurants($city_alias): void
     {
         $cities = new Content();
         $city = $cities->getCity((string) $city_alias);
@@ -477,7 +472,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function restaurant($city_alias, $restaurant_alias, $restaurant_id)
+    public function restaurant($city_alias, $restaurant_alias, $restaurant_id): void
     {
         $cities = new Content();
         $restaurant = $cities->getRestaurant((string)$city_alias, (string)$restaurant_alias, (int) $restaurant_id);
@@ -552,7 +547,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function znakomstva($city_alias)
+    public function znakomstva($city_alias): void
     {
         $cities = new Content();
         $city = $cities->getCity((string)$city_alias);
@@ -605,7 +600,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws NotFoundException
      */
-    public function foto($city_alias)
+    public function foto($city_alias): void
     {
         $cities = new Content();
         $city = $cities->getCity((string)$city_alias);
@@ -636,14 +631,14 @@ class ContentController extends AbstractUsersAuthController
             ]);
     }
 
-    public function politics()
+    public function politics(): void
     {
         $robots = '<meta name="robots" content="noindex, nofollow" />' . PHP_EOL;
         $this->view->setVar('robots', $robots);
         $this->view->renderHtml('content/politics.php', ['title' => 'Политика обработки персональных данных пользователей']);
     }
 
-    public function guessCity()
+    public function guessCity(): void
     {
         $cities = new Content();
         $citiesRandom = $cities->getRandomCity();
@@ -656,7 +651,7 @@ class ContentController extends AbstractUsersAuthController
     /**
      * @throws ForbiddenException
      */
-    public function redirect($url)
+    public function redirect($url): void
     {
         if (!empty($_SERVER['HTTP_REFERER'])) {
             if (preg_match('~https://rus-trip\.ru~m', $_SERVER['HTTP_REFERER'])) {

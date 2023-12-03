@@ -13,7 +13,7 @@ class PostErrorController extends AbstractUsersAuthController
      * @throws Exception
      */
 
-    public function getResponse()
+    public function getResponse(): void
     {
         $data = [];
         $id = (int) $_POST['id'];
@@ -30,7 +30,7 @@ class PostErrorController extends AbstractUsersAuthController
     /**
      * @throws \Exception
      */
-    public function getError($id, $object_group)
+    public function getError($id, $object_group): void
     {
         if(!isset($_SESSION))
         {

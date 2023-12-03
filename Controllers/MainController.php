@@ -10,7 +10,7 @@ class MainController extends AbstractUsersAuthController
     /**
      * @throws \Exception
      */
-    public function main($url)
+    public function main($url): void
     {
         if(!empty($url)){
             header('Location: https://rus-trip.ru', true, 301);

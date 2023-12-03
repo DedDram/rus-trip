@@ -27,7 +27,7 @@ class UsersController extends AbstractUsersAuthController
     /**
      * @throws \Exception
      */
-    public function signUp()
+    public function signUp(): void
     {
         if (!empty($_POST)) {
             try {
@@ -52,7 +52,7 @@ class UsersController extends AbstractUsersAuthController
         $this->view->renderHtml('users/signUp.php');
     }
 
-    public function activate(int $userId, string $activationCode)
+    public function activate(int $userId, string $activationCode): void
     {
         $user = User::getById($userId);
         if (!empty($user)) {
@@ -68,7 +68,7 @@ class UsersController extends AbstractUsersAuthController
         }
     }
 
-    public function login()
+    public function login(): void
     {
         if (!empty($_POST)) {
             try {
@@ -89,7 +89,7 @@ class UsersController extends AbstractUsersAuthController
         $this->view->renderHtml('users/login.php', ['title' => 'Авторизация']);
     }
 
-    public function logOut()
+    public function logOut(): void
     {
         if (!empty($_COOKIE['tokenAuthCook'])) {
             setcookie('tokenAuthCook', '', 0, '/', '', false, true);
@@ -125,7 +125,7 @@ class UsersController extends AbstractUsersAuthController
         $this->view->renderHtml('users/reset.php');
     }
 
-    public function resetCheck(int $userId, string $activationCode)
+    public function resetCheck(int $userId, string $activationCode): void
     {
         $user = User::getById($userId);
         if (!empty($user)) {
@@ -142,7 +142,7 @@ class UsersController extends AbstractUsersAuthController
     }
 
 
-    public function newPassword(int $userId)
+    public function newPassword(int $userId): void
     {
         if (!empty($_POST)) {
             try {
@@ -160,10 +160,9 @@ class UsersController extends AbstractUsersAuthController
 
     /**
      * @throws ForbiddenException
-     * @throws NotFoundException
      * @throws InvalidArgumentException
      */
-    public function profile()
+    public function profile(): void
     {
         $userObj = new User;
         if (!empty($_POST)) {
@@ -176,16 +175,9 @@ class UsersController extends AbstractUsersAuthController
             $userObj->updateUser($this->user->getId());
         }
         if (!empty($this->user)) {
-            $school = [];
-            if($this->user->isAgent()){
-                $school = (new \Models\Schools\Schools)->getItemSchool($this->user->getSchoolId());
-            }
-            $comments = $userObj->getCommentsUser($this->user->getId());
             $this->view->renderHtml('users/profile.php',
                 ['user' => $this->user,
                     'title' => 'Личный кабинет',
-                    'maps' => $comments,
-                    'school' => $school,
                 ]);
         } else {
             throw new ForbiddenException();
