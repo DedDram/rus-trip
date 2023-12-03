@@ -37,7 +37,7 @@ class UsersController extends AbstractUsersAuthController
                 return;
             }
 
-            if (!empty($user)) {
+            if ($user !== null && $user instanceof User) {
                 $code = UserActivationService::createActivationCode($user);
 
                 EmailSender::send($user->getEmail(), 'Активация', 'userActivation.php', [

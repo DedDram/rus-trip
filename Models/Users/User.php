@@ -189,10 +189,10 @@ class User extends ActiveRecordEntity
         //регистрация представителя школы
         if (!empty($userData['task']) && $userData['task'] == 'agent' && !empty($userData['item_id'])) {
             $user->usersGroup = 2;
-            $user->school_id = (int)$userData['item_id'];
-            $user->fio_agent = (string)$userData['fio_agent'];
-            $user->position_agent = (string)$userData['position_agent'];
-            $user->phone_agent = (string)$userData['phone_agent'];
+            $user->school_id = (int) $userData['item_id'];
+            $user->fio_agent = (string) $userData['fio_agent'];
+            $user->position_agent = (string) $userData['position_agent'];
+            $user->phone_agent = (string) $userData['phone_agent'];
         } else {
             $user->usersGroup = 0;
         }

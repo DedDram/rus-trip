@@ -8,6 +8,10 @@ use Services\Db;
 class SiteMap
 {
     protected object $db;
+
+    /**
+     * @throws \DOMException
+     */
     public function __construct()
     {
         $this->db = Db::getInstance();
