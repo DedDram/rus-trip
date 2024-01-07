@@ -56,7 +56,7 @@ return [
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restaurants($|\?(.*)$)~', [\Controllers\ContentController::class, 'restaurants']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restorany($|\?(.*)$)~', [\Controllers\ContentController::class, 'RedirectRestaurants']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restorany/(.*)$~', [\Controllers\ContentController::class, 'RedirectRestaurants']],
-    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restaurant-([a-z\d\-]+)-(\d+)$~', [\Controllers\ContentController::class, 'restaurant']],
+    ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/restaurant-([a-z\d\-]+)-(\d+)($|\?(.*)$)~', [\Controllers\ContentController::class, 'restaurant']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/znakomstva($|\?(.*)$)~', [\Controllers\ContentController::class, 'znakomstva']],
     ['GET', '~^/([a-zA-Z]+(?:-[a-zA-Z]+)*)/foto($|\?(.*)$)~', [\Controllers\ContentController::class, 'foto']],
 ];

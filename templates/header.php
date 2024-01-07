@@ -75,7 +75,36 @@
                 </div>
             </ul>
         </nav>
+
         <div class="w728">
+            <?php if (!empty($user)): ?>
+                <?php if (!empty($_GET['task']) && $user->isAdmin()): ?>
+                    <div id="system-message">
+                        <div class="alert alert-message">
+                            <div>
+                                <?php if ($_GET['task'] == 'unpublish'): ?>
+                                    <div class="alert-message">Комментарий снят с публикации</div>
+                                <?php elseif ($_GET['task'] == 'publish'): ?>
+                                    <div class="alert-message">Комментарий опубликован</div>
+                                <?php elseif ($_GET['task'] == 'remove'): ?>
+                                    <div class="alert-message">Комментарий удален</div>
+                                <?php elseif ($_GET['task'] == 'blacklist'): ?>
+                                    <div class="alert-message">Пользователь заблокирован</div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <?php if (!empty($_GET['task']) && $_GET['task'] == 'unsubscribe'): ?>
+                    <div id="system-message">
+                        <div class="alert alert-message">
+                            <div>
+                                <div class="alert-message">Вы отписались от новых уведомлений</div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
             <!--module.db:ads-top-leaderboard-->
         </div>
     </div>
